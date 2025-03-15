@@ -1,0 +1,21 @@
+[project]
+name = "appname"
+version = "0.0.1"
+authors = [
+  { name="Conor Zhang", email="chz9577@nyu.edu" },
+]
+description = "A project to showcase working with the MTA API to create an application."
+dependencies = [
+    "flask",
+    "requests",
+    "gtfs-realtime-bindings",
+]
+readme = "README.md"
+requires-python = ">=3.8"
+
+[project.urls]
+Homepage = "https://github.com/MTA-Transit-Hub/LCBoot2025"
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"

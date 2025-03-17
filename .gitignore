@@ -175,3 +175,12 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+# Boruch's files
+/gtfs
+API_links.txt
+BusAPIkey.txt
+endpoints.md
+test.py
+jsonoutput.json

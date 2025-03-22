@@ -178,9 +178,4 @@ cython_debug/
 
 
 # Boruch's files
-/gtfs
-API_links.txt
-BusAPIkey.txt
-endpoints.md
-test.py
-jsonoutput.json
+/boruch_test

@@ -1,11 +1,24 @@
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS post;
+import sqlite3
 
+# Connect to the database (or create it if it doesn't exist)
+connection = sqlite3.connect("appname.db")
+cursor = connection.cursor()
+
+# Execute SQL commands
+cursor.execute("DROP TABLE IF EXISTS user;")
+cursor.execute("DROP TABLE IF EXISTS post;")
+
+cursor.execute("""
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL
 );
+""")
+
+# Commit changes and close the connection
+connection.commit()
+connection.close()
 
 # Maybe we'll need later? I would assume not
 # CREATE TABLE post (

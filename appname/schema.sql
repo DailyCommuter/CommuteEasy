@@ -9,11 +9,24 @@ CREATE TABLE user (
 );
 
 
-CREATE TABLE subway_route (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  author_id INTEGER NOT NULL,
-  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  title TEXT NOT NULL,
-  body TEXT NOT NULL,
-  FOREIGN KEY (author_id) REFERENCES user (id)
+CREATE TABLE subway_alerts (
+  alert_id TEXT,
+  agency_id TEXT,
+  route_id INTEGER,
+  alert_text TEXT,
+  description_text TEXT
+);
+
+
+CREATE TABLE trip_update (
+  update_id TEXT,
+  trip_id TEXT,
+  start_tm TEXT,
+  start_dt TEXT,
+  route_id TEXT,
+  arrival INTEGER,
+  departure INTEGER,
+  stop_id TEXT,
+  timestmp INTEGER,
+  curr_stop_id TEXT
 );

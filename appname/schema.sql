@@ -7,6 +7,7 @@ CREATE TABLE user (
   password TEXT NOT NULL
 );
 
+-- Maybe we'll need later? I would assume not
 CREATE TABLE post (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   author_id INTEGER NOT NULL,

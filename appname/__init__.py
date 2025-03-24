@@ -5,9 +5,12 @@ from flask import Flask
 
 def create_app(test_config=None):
     # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=True, template_folder="templates")
     app.config.from_mapping(
+        # SECRET_KEY should be overridden with a random value when deploying
+        # Maybe set via config.py below?
         SECRET_KEY='dev',
+        # change appname to whatever we rename the app
         DATABASE=os.path.join(app.instance_path, 'appname.sqlite'),
     )
 
@@ -31,5 +34,13 @@ def create_app(test_config=None):
 
     from . import db
     db.init_app(app)
+
+    # Add when implementing users/login
+    # from . import auth
+    # app.register_blueprint(auth.bp)
+
+    from . import blog
+    app.register_blueprint(blog.bp)
+    app.add_url_rule('/', endpoint='index')
 
     return app

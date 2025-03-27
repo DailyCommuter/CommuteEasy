@@ -37,88 +37,118 @@ Example:
 ----------------------------------
 id: "000031FS"
 trip_update {
-  trip {
-    trip_id: "111150_FS.S01R"
-    start_time: "18:31:30"
-    start_date: "20250324"
-    route_id: "FS"
-  }
-  stop_time_update {
-    arrival {
-      time: 1742855490
+    trip {
+        trip_id: "111150_FS.S01R"
+        start_time: "18:31:30"
+        start_date: "20250324"
+        route_id: "FS"
     }
-    departure {
-      time: 1742855490
+    stop_time_update {
+        arrival {
+            time: 1742855490
+        }
+        departure {
+            time: 1742855490
+        }
+        stop_id: "S01S"
     }
-    stop_id: "S01S"
-  }
 
-  ...
+    ...
 
-  stop_time_update {
-    arrival {
-      time: 1742855880
+    stop_time_update {
+        arrival {
+            time: 1742855880
+        }
+        departure {
+            time: 1742855880
+        }
+        stop_id: "D26S"
     }
-    departure {
-      time: 1742855880
-    }
-    stop_id: "D26S"
-  }
 } 
 ----------------------------------
 id: "000030FS"
 vehicle {
-  trip {
-    trip_id: "111100_FS.N01R"
-    start_time: "18:31:00"
-    start_date: "20250324"
-    route_id: "FS"
-  }
-  timestamp: 1742855460
-  stop_id: "D26N"
+    trip {
+        trip_id: "111100_FS.N01R"
+        start_time: "18:31:00"
+        start_date: "20250324"
+        route_id: "FS"
+    }
+    timestamp: 1742855460
+    stop_id: "D26N"
 }
 ----------------------------------
 '''
 def update_trains(feed):
     db = get_db()
-    for entity in feed.entity:
-        # Get and store the update_id
-        db.execute(
-            'INSERT INTO trip_update (update_id)'
-            'VALUES (?)',
-            (entity.id,)
-        )
-        db.commit()
-        # Get and store the trip info about the following updates
-        if entity.HasField('trip_update'):
-            db.execute(
-                'INSERT INTO trip_update (trip_id, start_tm, start_dt, route_id)'
-                'VALUES (?, ?, ?, ?)',
-                (entity.trip_update.trip.trip_id, 
-                entity.trip_update.trip.start_time, 
-                entity.trip_update.trip.start_date, 
-                entity.trip_update.trip.route_id,)
-            )
-            db.commit()
-            # Get and store the actual updates info
-            for update in entity.trip_update.stop_time_update:
+
+    try:
+        for entity in feed.entity:
+            # Check if update_id already exists (prevents duplicates)
+            id_exists = db.execute(
+                "SELECT id FROM trip_update WHERE update_id = ?", 
+                (entity.id,)
+            ).fetchone()
+
+            if id_exists:
+                print(f"Skipping duplicate update_id: {entity.id}")
+                continue
+            
+            # Get and store the trip info about the following updates
+            if entity.HasField('trip_update'):
                 db.execute(
-                    'INSERT INTO trip_update (arrival, departure, stop_id)'
-                    'VALUES (?, ?, ?)',
-                    (update.arrival.time, 
-                    update.departure.time, 
-                    update.stop_id,)
+                    """
+                    INSERT INTO trip_update 
+                    (update_id, trip_id, start_tm, start_dt, route_id)
+                    VALUES (?, ?, ?, ?, ?)
+                    """,
+                    (entity.id,
+                    entity.trip_update.trip.trip_id, 
+                    entity.trip_update.trip.start_time, 
+                    entity.trip_update.trip.start_date, 
+                    entity.trip_update.trip.route_id,)
                 )
-                db.commit()
-        # Get and store the vehecle info about the above updates
-        if entity.HasField('vehicle'):
-            db.execute(
-                'INSERT INTO trip_update (timestmp, curr_stop_id)'
-                'VALUES (?, ?)',
-                (entity.vehicle.timestamp, 
-                entity.vehicle.stop_id,)
-            )
-            db.commit()
+
+                # Get id from the main trip_update table as reference 
+                # for stop_update and vehicle_update tables
+                trip_update_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
+
+                # Get and store the actual updates info
+                for update in entity.trip_update.stop_time_update:
+                    db.execute(
+                        """
+                        INSERT INTO trip_update 
+                        (arrival, departure, stop_id)
+                        VALUES (?, ?, ?, ?)
+                        """,
+                        (trip_update_id,
+                        update.arrival.time, 
+                        update.departure.time, 
+                        update.stop_id,)
+                    )
+
+            # Get and store the vehecle info about the above updates
+            if entity.HasField('vehicle'):
+                db.execute(
+                    """
+                    INSERT INTO trip_update
+                    (trip_update_id, timestmp, curr_stop_id)
+                    VALUES (?, ?, ?)
+                    """,
+                    (trip_update_id,
+                    entity.vehicle.timestamp, 
+                    entity.vehicle.stop_id,)
+                )
+        db.commit()
+
+    except sqlite3.IntegrityError as e:
+        db.rollback()
+        print(f"Integrity Error: {e}")
+    except Exception as e:
+        db.rollback()
+        print(f"Error updating database: {e}")
+    finally:
+        db.close()
 
 
 def get_feeds():

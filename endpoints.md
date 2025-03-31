@@ -1,117 +1,57 @@
-# Subway
+# Endpoints
 
-### A C E Sr
+## Updates
 
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-ace
+### Trains
 
-### B D F M Sf
+[A, C, E, Sr](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-ace)
 
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-bdfm
+[B, D, F, M, Sf](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-bdfm)
 
-### G
+[G](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-g)
 
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-g
+[N, Q, R, W](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-nqrw)
 
-### N Q R W
+[L](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l)
 
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-nqrw
+[1, 2, 3, 4, 5, 6, 7, S](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs)
 
-### L
+[Staten Island Railroad](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-si)
 
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l
+[LIRR](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/lirr%2Fgtfs-lirr)
 
-### 1 2 3 4 5 6 7 S
+[Metro-North](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/mnr%2Fgtfs-mnr)
 
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs
+### Buses
 
-## SIR
+**Uses RESTful-API:**
 
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-si
+[NYC Buses](https://bt.mta.info/wiki/Developers/OneBusAwayRESTfulAPI)
 
-## LIRR
+## Service Alert Feeds
 
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/lirr%2Fgtfs-lirr
+[All Service Alerts - GTFS](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fall-alerts)\
+[All Service Alerts - JSON](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fall-alerts.json)
 
-## Metro-North
+[Subway Alerts - GTFS](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fsubway-alerts)\
+[Subway Alerts - JSON](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fsubway-alerts.json)
 
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/mnr%2Fgtfs-mnr
+[Bus Alerts - GTFS](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fbus-alerts)\
+[Bus Alerts - JSON](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fbus-alerts.json)
 
-# Bus APIs
+[LIRR Alerts - GTFS](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Flirr-alerts)\
+[LIRR Alerts - JSON](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Flirr-alerts.json)
 
-https://bt.mta.info/wiki/Developers/OneBusAwayRESTfulAPI
+[Metro-North Alerts - GTFS](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fmnr-alerts)\
+[Metro-North Alerts - JSON](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fmnr-alerts.json)
 
-# Service Alert Feeds
+## Elevator and Escalator Feeds
 
-## GTFS Feeds
+[Elevator and Escalator Current Outages - XML](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fnyct_ene.xml)\
+[Elevator and Escalator Current Outages - JSON](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fnyct_ene.json)
 
-### All Service Alerts
+[Elevator and Escalator Upcoming Outages - XML](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fnyct_ene_upcoming.xml)\
+[Elevator and Escalator Upcoming Outages - JSON](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fnyct_ene_upcoming.json)
 
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fall-alerts
-
-### Subway Alerts
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fsubway-alerts
-
-### Bus Alerts
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fbus-alerts
-
-### Long Island Railroad Alerts
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Flirr-alerts
-
-### Metro-North Railroad Alerts
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fmnr-alerts
-
-## JSON Feeds
-
-### All Service Alerts
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fall-alerts.json
-
-### Subway Alerts
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fsubway-alerts.json
-
-### Bus Alerts
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fbus-alerts.json
-
-### Long Island Railroad Alerts
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Flirr-alerts.json
-
-### Metro-North Railroad Alerts
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fmnr-alerts.json
-
-# Elevator and Escalator Feeds
-
-## XML Feeds
-
-### Elevator and Escalator Current Outages
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fnyct_ene.xml
-
-### Elevator and Escalator Upcoming Outages
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fnyct_ene_upcoming.xml
-
-### Elevator and Escalator Equipment
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fnyct_ene_equipments.xml
-
-## JSON Feeds
-
-### Elevator and Escalator Current Outages
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fnyct_ene.json
-
-### Elevator and Escalator Upcoming Outages
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fnyct_ene_upcoming.json
-
-### Elevator and Escalator Equipment
-
-https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fnyct_ene_equipments.json
+[Elevator and Escalator Equipment - XML](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fnyct_ene_equipments.xml)\
+[Elevator and Escalator Equipment - JSON](https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fnyct_ene_equipments.json)

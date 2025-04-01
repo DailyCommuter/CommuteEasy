@@ -1,6 +1,3 @@
-#local env
-.venv/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -175,7 +172,3 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-
-
-# Boruch's files
-/boruch_test

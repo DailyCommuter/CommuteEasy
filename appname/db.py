@@ -2,27 +2,56 @@ import sqlite3
 from datetime import datetime
 from google.transit import gtfs_realtime_pb2
 import click
+import config
+import os
+from dotenv import load_dotenv
 from flask import current_app, g
 
 import requests
 
 
+# URLs for all api calls
 train_update_urls = [
-    "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-ace",
-    "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-bdfm",
-    "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-g",
-    "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-nqrw",
-    "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l",
-    "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs"]
+    config.ACESR_FEED_URL,
+    config.BDFM_FEED_URL,
+    config.G_FEED_URL,
+    config.NQRW_FEED_URL,
+    config.L_FEED_URL,
+    config.NUMBERS_AND_S_FEED_URL,
+    config.SIR_FEED_URL,
+    config.LIRR_FEED_URL,
+    config.METRO_NORTH_FEED_URL]
+
+service_alert_urls = [
+    config.ALL_SERVICE_ALERTS_URL_GTFS,
+    config.SUBWAY_ALERTS_URL_GTFS,
+    config.BUS_ALERTS_URL_GTFS,
+    config.LIRR_ALERTS_URL_GTFS,
+    config.METRO_NORTH_ALERTS_URL_GTFS]
+
+elev_escal_json_urls = [
+    config.ELEV_ESCAL_CURRENT_OUTAGES_JSON,
+    config.ELEV_ESCAL_UPCOMING_OUTAGES_JSON,
+    config.ELEV_ESCAL_EQUIPMENTS_OUTAGES_JSON,]
+
+# The bus api still requires an api key, thus the need for dotenv
+# API key must be given to server when deploying
+load_dotenv()
+BUS_FEED_KEY = os.getenv("BUS_FEED_KEY")
 
 
-def fetch_data(endpoint):
+def fetch_data(endpoint, key=None):
     feed = gtfs_realtime_pb2.FeedMessage()
-    response = requests.get(endpoint)
-    feed.ParseFromString(response.content)
+    if key is not None:
+        response = requests.get(endpoint)
+        feed.ParseFromString(response.content)
+    else:
+        response = requests.get(f"{endpoint}key={key}")
+        feed.ParseFromString(response.content)
     return feed
 
-# update_<TRAIN> GTFS structure is as follows:
+
+# Train update GTFS structure is as follows:
 '''
 Has 2 types of entities:
 trip_update (if there is a delay etc) which contains:
@@ -151,17 +180,19 @@ def update_trains(feed):
         db.close()
 
 
-def get_feeds():
-    for url in train_update_urls:
-        update_trains(fetch_data(url))
+# Bus update GTFS structure is as follows:
+def update_busses(feed):
+    pass
 
 
-def update_ACE():
-    feed = fetch_data("https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-ace")
-    update_trains(feed)
+# Elevator and escalator alert GTFS structure is as follows:
+def update_elev_escal_alerts(feed):
+    pass
 
 
-# update_service GTFS structure is as follows:
+# TODO double check that the individual service alert feeds 
+#   are the same structure as the "All Service Alerts" feed
+# Service alert GTFS structure is as follows:
 '''
 Example:
 ----------------------------------
@@ -253,8 +284,7 @@ alert {
   }
 }
 '''
-def update_service():
-    feed = fetch_data("https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fsubway-alerts")
+def update_service_alerts(feed):
     db = get_db()
     i = 0
     while i < 5:
@@ -283,6 +313,23 @@ def update_service():
             i += 1
 
 
+def update_all_feeds():
+    # Update all the trains
+    for url in train_update_urls:
+        update_trains(fetch_data(url))
+    
+    # TODO Complete update_busses() to get bus data
+    
+    # TODO Complete/confirm the update_service_alerts() function
+    # Update all the alerts
+    # for url in service_alert_urls:
+    #     update_service_alerts(fetch_data(url))
+
+
+
+'''
+Functions for initialization and teardown of the app
+'''
 # Register close_db and init_db_command with the Application
 def init_app(app):
     app.teardown_appcontext(close_db)

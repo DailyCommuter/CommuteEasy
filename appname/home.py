@@ -6,7 +6,7 @@ from werkzeug.exceptions import abort
 # change whenever we change the name of the app
 from appname.auth import login_required
 from appname.db import (
-  get_db, update_service, update_ACE
+  get_db, update_all_feeds
 )
 
 bp = Blueprint('home', __name__)
@@ -16,7 +16,7 @@ bp = Blueprint('home', __name__)
 def index():
     # Update the databases when the home page loads
     # TODO implement updating the db at some interval (maybe every 2 minutes?)
-    update_service()
+    update_all_feeds()
     db = get_db()
     subway_alerts = db.execute(
         'SELECT *'

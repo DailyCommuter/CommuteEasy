@@ -4,8 +4,8 @@ from flask import (
 from werkzeug.exceptions import abort
 
 # change whenever we change the name of the app
-from appname.auth import login_required
-from appname.db import (
+from DailyCommuter.auth import login_required
+from DailyCommuter.db import (
   get_db, update_all_feeds
 )
 

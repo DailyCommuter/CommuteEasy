@@ -24,3 +24,20 @@ A web application to offer real-time updates, schedules, and transit information
 - Deployment: [Netlify](https://www.netlify.com/) or [Vercel](https://vercel.com/) (free hosting options). Version Control: Git (for version control) and GitHub (for repository hosting).
 - Security: Implement basic security measures for user data.
 - Documentation: Keep code and API usage documented for maintainability. [Guide](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/quickstart-for-writing-on-github)
+
+## Development
+
+Run the following commands in your terminal
+
+```cmd
+pip install virtualenv
+virtualenv venv
+venv\Scripts\activate
+(for MacOS/Linux: source venv/bin/activate)
+pip install -r requirements.txt
+
+<!-- Initialize the database -->
+flask --app DailyCommuter init-db
+<!-- Start the app -->
+flask --app DailyCommuter run --debug
+```

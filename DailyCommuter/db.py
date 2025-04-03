@@ -18,9 +18,7 @@ train_update_urls = [
     config.NQRW_FEED_URL,
     config.L_FEED_URL,
     config.NUMBERS_AND_S_FEED_URL,
-    config.SIR_FEED_URL,
-    config.LIRR_FEED_URL,
-    config.METRO_NORTH_FEED_URL]
+    config.SIR_FEED_URL,]
 
 service_alert_urls = [
     config.ALL_SERVICE_ALERTS_URL_GTFS,
@@ -42,7 +40,7 @@ BUS_FEED_KEY = os.getenv("BUS_FEED_KEY")
 
 def fetch_data(endpoint, key=None):
     feed = gtfs_realtime_pb2.FeedMessage()
-    if key is not None:
+    if key is None:
         response = requests.get(endpoint)
         feed.ParseFromString(response.content)
     else:
@@ -109,75 +107,75 @@ vehicle {
 ----------------------------------
 '''
 def update_trains(feed):
-    db = get_db()
-
     try:
-        for entity in feed.entity:
-            # Check if update_id already exists (prevents duplicates)
-            id_exists = db.execute(
-                "SELECT id FROM trip_update WHERE update_id = ?", 
-                (entity.id,)
-            ).fetchone()
+        with get_db() as db:
+            trip_update_id = None
+            for entity in feed.entity:
+                # Check if update_id already exists (prevents duplicates)
+                id_exists = db.execute(
+                    "SELECT id FROM trip_update WHERE update_id = ?", 
+                    (entity.id,)
+                ).fetchone()
 
-            if id_exists:
-                print(f"Skipping duplicate update_id: {entity.id}")
-                continue
-            
-            # Get and store the trip info about the following updates
-            if entity.HasField('trip_update'):
-                db.execute(
-                    """
-                    INSERT INTO trip_update 
-                    (update_id, trip_id, start_tm, start_dt, route_id)
-                    VALUES (?, ?, ?, ?, ?)
-                    """,
-                    (entity.id,
-                    entity.trip_update.trip.trip_id, 
-                    entity.trip_update.trip.start_time, 
-                    entity.trip_update.trip.start_date, 
-                    entity.trip_update.trip.route_id,)
-                )
-
-                # Get id from the main trip_update table as reference 
-                # for stop_update and vehicle_update tables
-                trip_update_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
-
-                # Get and store the actual updates info
-                for update in entity.trip_update.stop_time_update:
+                if id_exists:
+                    # print(f"Skipping duplicate update_id: {entity.id}")
+                    continue
+                
+                # Get and store the trip info about the following updates
+                if entity.HasField('trip_update'):
                     db.execute(
                         """
                         INSERT INTO trip_update 
-                        (arrival, departure, stop_id)
-                        VALUES (?, ?, ?, ?)
+                        (update_id, trip_id, start_tm, start_dt, route_id)
+                        VALUES (?, ?, ?, ?, ?)
                         """,
-                        (trip_update_id,
-                        update.arrival.time, 
-                        update.departure.time, 
-                        update.stop_id,)
+                        (entity.id,
+                        entity.trip_update.trip.trip_id, 
+                        entity.trip_update.trip.start_time, 
+                        entity.trip_update.trip.start_date, 
+                        entity.trip_update.trip.route_id,)
                     )
 
-            # Get and store the vehecle info about the above updates
-            if entity.HasField('vehicle'):
-                db.execute(
-                    """
-                    INSERT INTO trip_update
-                    (trip_update_id, timestmp, curr_stop_id)
-                    VALUES (?, ?, ?)
-                    """,
-                    (trip_update_id,
-                    entity.vehicle.timestamp, 
-                    entity.vehicle.stop_id,)
-                )
-        db.commit()
+                    # Get id from the main trip_update table as reference 
+                    # for stop_update and vehicle_update tables
+                    trip_update_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
+
+                    # Get and store the actual updates info
+                    for update in entity.trip_update.stop_time_update:
+                        if trip_update_id is not None:
+                            db.execute(
+                                """
+                                INSERT INTO stop_update 
+                                (trip_update_id, arrival, departure, stop_id)
+                                VALUES (?, ?, ?, ?)
+                                """,
+                                (trip_update_id,
+                                update.arrival.time, 
+                                update.departure.time, 
+                                update.stop_id,)
+                            )
+
+                # Get and store the vehecle info about the above updates
+                if entity.HasField('vehicle'):
+                    if trip_update_id is not None:
+                        db.execute(
+                            """
+                            INSERT INTO vehicle_update
+                            (trip_update_id, timestmp, curr_stop_id)
+                            VALUES (?, ?, ?)
+                            """,
+                            (trip_update_id,
+                            entity.vehicle.timestamp, 
+                            entity.vehicle.stop_id,)
+                        )
+            db.commit()
 
     except sqlite3.IntegrityError as e:
-        db.rollback()
         print(f"Integrity Error: {e}")
     except Exception as e:
-        db.rollback()
         print(f"Error updating database: {e}")
     finally:
-        db.close()
+        pass
 
 
 # Bus update GTFS structure is as follows:

@@ -1,7 +1,7 @@
 import sqlite3
 
 # Connect to the database (or create it if it doesn't exist)
-conn = sqlite3.connect('appname.db')
+conn = sqlite3.connect('DailyCommuter.db')
 cursor = conn.cursor()
 
 # Execute the SQL commands

@@ -10,8 +10,7 @@ def create_app(test_config=None):
         # SECRET_KEY should be overridden with a random value when deploying
         # Maybe set via config.py below?
         SECRET_KEY='dev',
-        # change appname to whatever we rename the app
-        DATABASE=os.path.join(app.instance_path, 'appname.sqlite'),
+        DATABASE=os.path.join(app.instance_path, 'DailyCommuter.sqlite'),
     )
 
     if test_config is None:

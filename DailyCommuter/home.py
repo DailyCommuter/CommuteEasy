@@ -4,8 +4,8 @@ from flask import (
 from werkzeug.exceptions import abort
 
 # change whenever we change the name of the app
-from appname.auth import login_required
-from appname.db import (
+from DailyCommuter.auth import login_required
+from DailyCommuter.db import (
   get_db, update_all_feeds
 )
 
@@ -18,11 +18,11 @@ def index():
     # TODO implement updating the db at some interval (maybe every 2 minutes?)
     update_all_feeds()
     db = get_db()
-    subway_alerts = db.execute(
+    trip_update = db.execute(
         'SELECT *'
-        ' FROM subway_alerts'
+        ' FROM trip_update'
         ' WHERE route_id = "GS"'
     ).fetchall()
-    for alert in subway_alerts:
+    for alert in trip_update:
         print(dict(alert))
-    return render_template('home/index.html', subway_alerts = subway_alerts)
+    return render_template('home/index.html', trip_update = trip_update)

@@ -46,3 +46,14 @@ CREATE TABLE vehicle_update (
     curr_stop_id TEXT,
     FOREIGN KEY (trip_update_id) REFERENCES trip_update(id)
 );
+
+
+CREATE TABLE all_subway_stops (
+    stop_name TEXT NOT NULL,
+    display_name TEXT NOT NULL,
+    gtfs_stop_id TEXT NOT NULL,
+    latitude INTEGER NOT NULL,
+    longitude INTEGER NOT NULL,
+    ada_number INTEGER NOT NULL,
+    ada_notes TEXT
+)

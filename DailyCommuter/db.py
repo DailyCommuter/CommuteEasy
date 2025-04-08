@@ -356,12 +356,19 @@ def init_app(app):
     app.cli.add_command(init_db_command)
 
 
+# for Gideok
+def get_all_subway_stops():
+    pass
+
+
 # Initialize the db
 def init_db():
     db = get_db()
 
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
+
+    get_all_subway_stops()
 
 
 # Set up the command 'init-db' for the Flask CLI

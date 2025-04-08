@@ -152,7 +152,8 @@ def update_trains(feed):
                                 (trip_update_id,
                                 update.arrival.time, 
                                 update.departure.time, 
-                                update.stop_id,)
+                                update.stop_id[:-1],
+                                update.stop_id[-1],)
                             )
 
                 # Get and store the vehecle info about the above updates
@@ -323,6 +324,27 @@ def update_all_feeds():
     # for url in service_alert_urls:
     #     update_service_alerts(fetch_data(url))
 
+
+# Find the SUBWAY stop that is closest to the given latitude and longitude
+def closest_sub_stop(lat, lon):
+    pass
+
+
+# Find the BUS stop that is closest to the given latitude and longitude
+def closest_bus_stop(lat, lon):
+    pass
+
+
+# Route:
+#   Receive latitude and longitude from Front End, for both, the trip start, and trip end
+#   Identify 2 stops that are closest to start and end
+#   (Find all stops that are between the 2)
+#   Get the arrival times of trains at start and end stops
+#   Get the estimated travel time from start to end
+def map_sub_route(start_lat, start_lon, end_lat, end_lon):
+    start_stop = closest_sub_stop(start_lat, start_lon)
+    end_stop = closest_sub_stop(end_lat, end_lon)
+    pass
 
 
 '''

@@ -34,6 +34,7 @@ CREATE TABLE stop_update (
     arrival INTEGER,
     departure INTEGER,
     stop_id TEXT,
+    direction TEXT,
     FOREIGN KEY (trip_update_id) REFERENCES trip_update(id)
 );
 

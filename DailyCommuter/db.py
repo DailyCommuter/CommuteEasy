@@ -152,7 +152,8 @@ def update_trains(feed):
                                 (trip_update_id,
                                 update.arrival.time, 
                                 update.departure.time, 
-                                update.stop_id,)
+                                update.stop_id[:-1],
+                                update.stop_id[-1],)
                             )
 
                 # Get and store the vehecle info about the above updates
@@ -324,6 +325,27 @@ def update_all_feeds():
     #     update_service_alerts(fetch_data(url))
 
 
+# Find the SUBWAY stop that is closest to the given latitude and longitude
+def closest_sub_stop(lat, lon):
+    pass
+
+
+# Find the BUS stop that is closest to the given latitude and longitude
+def closest_bus_stop(lat, lon):
+    pass
+
+
+# Route:
+#   Receive latitude and longitude from Front End, for both, the trip start, and trip end
+#   Identify 2 stops that are closest to start and end
+#   (Find all stops that are between the 2)
+#   Get the arrival times of trains at start and end stops
+#   Get the estimated travel time from start to end
+def map_sub_route(start_lat, start_lon, end_lat, end_lon):
+    start_stop = closest_sub_stop(start_lat, start_lon)
+    end_stop = closest_sub_stop(end_lat, end_lon)
+    pass
+
 
 '''
 Functions for initialization and teardown of the app
@@ -334,12 +356,19 @@ def init_app(app):
     app.cli.add_command(init_db_command)
 
 
+# for Gideok
+def get_all_subway_stops():
+    pass
+
+
 # Initialize the db
 def init_db():
     db = get_db()
 
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
+
+    get_all_subway_stops()
 
 
 # Set up the command 'init-db' for the Flask CLI

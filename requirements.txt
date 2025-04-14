@@ -2,6 +2,10 @@ blinker
 click
 dotenv
 flask
+flask-cors  // allows for connection between flask and react
+react
+npm
+node
 google
 gtfs-realtime-bindings
 datetime

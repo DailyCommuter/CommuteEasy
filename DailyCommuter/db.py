@@ -4,6 +4,7 @@ from google.transit import gtfs_realtime_pb2
 import click
 import config
 import os
+from numpy import sqrt
 from dotenv import load_dotenv
 from flask import current_app, g
 
@@ -42,6 +43,9 @@ def fetch_data(endpoint, key=None):
     feed = gtfs_realtime_pb2.FeedMessage()
     if key is None:
         response = requests.get(endpoint)
+        if not response.status_code == 200:
+            print(f"Failed to fetch data: {response.status_code}")
+            return
         feed.ParseFromString(response.content)
     else:
         response = requests.get(f"{endpoint}key={key}")
@@ -52,10 +56,12 @@ def fetch_data(endpoint, key=None):
 # Train update GTFS structure is as follows:
 '''
 Has 2 types of entities:
-trip_update (if there is a delay etc) which contains:
+trip_update (if there is a delay etc) show information about the stops a train will make in the future (stopTimeUpdates)
+Contains:
     trip
     stop_time_update (for each stop on the route_id)
-vehicle (what stop it's currently at on this route_id) which contains:
+vehicle (what stop it's currently at on this route_id) show information about the current status of the train
+Contains:
     trip
     timestamp
     stop_id
@@ -326,13 +332,38 @@ def update_all_feeds():
 
 
 # Find the SUBWAY stop that is closest to the given latitude and longitude
+# @param lat: latitude of your current location
+# @param lon: longitude of your current location
+# @return tuple: gtfs_stop_id, latitude, and longitude for the closest stop
 def closest_sub_stop(lat, lon):
-    pass
+    try:
+        with get_db() as db:
+            rows = db.execute(
+                "SELECT latitude, longitude, gtfs_stop_id FROM subway_stops"
+            ).fetchall()
+    except sqlite3.IntegrityError as e:
+        print(f"Integrity Error: {e}")
+    except Exception as e:
+        print(f"Error updating database: {e}")
 
+    finally:
+        closest_stop_location = 10000
+        closest_stop_gtfs_id = "no_closest_stop_id"
+        closest_lat = 0
+        closest_lon = 0
+        given_location = sqrt(lat**2 + lon**2)
+        for row in rows:
 
-# Find the BUS stop that is closest to the given latitude and longitude
-def closest_bus_stop(lat, lon):
-    pass
+            cur_location = sqrt(row["latitude"]**2 + row["longitude"]**2)
+            distance_to_stop = abs(given_location - cur_location)
+
+            if distance_to_stop < closest_stop_location:
+                closest_stop_location = distance_to_stop
+                closest_stop_gtfs_id = row["gtfs_stop_id"]
+                closest_lat = row["latitude"]
+                closest_lon = row["longitude"]
+
+        return closest_stop_gtfs_id, closest_lat, closest_lon
 
 
 # Route:
@@ -341,10 +372,13 @@ def closest_bus_stop(lat, lon):
 #   (Find all stops that are between the 2)
 #   Get the arrival times of trains at start and end stops
 #   Get the estimated travel time from start to end
-def map_sub_route(start_lat, start_lon, end_lat, end_lon):
-    start_stop = closest_sub_stop(start_lat, start_lon)
-    end_stop = closest_sub_stop(end_lat, end_lon)
-    pass
+def closest_subway_stops_from_map(start_lat, start_lon, end_lat, end_lon):
+    closest_start_stop = closest_sub_stop(start_lat, start_lon)
+    closest_end_stop = closest_sub_stop(end_lat, end_lon)
+    
+    # get routes that service the closest start and end stops
+    # Get the arrival times of trains at start and end stops
+    # Get the estimated travel time from start to end
 
 
 '''

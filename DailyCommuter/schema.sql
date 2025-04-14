@@ -48,12 +48,21 @@ CREATE TABLE vehicle_update (
 );
 
 
-CREATE TABLE all_subway_stops (
+CREATE TABLE subway_stops (
     stop_name TEXT NOT NULL,
     display_name TEXT NOT NULL,
     gtfs_stop_id TEXT NOT NULL,
+    route_id TEXT NOT NULL,
     latitude INTEGER NOT NULL,
     longitude INTEGER NOT NULL,
     ada_number INTEGER NOT NULL,
     ada_notes TEXT
+)
+
+
+CREATE TABLE subway_routes (
+    route_id TEXT NOT NULL,
+    route_short_name TEXT NOT NULL,
+    route_long_name TEXT NOT NULL,
+    route_color TEXT NOT NULL,
 )

@@ -74,4 +74,5 @@ CREATE TABLE routes (
 	end_lat REAL,
 	end_lon REAL,
 	userid INTEGER NOT NULL
+	, bestTime INTEGER, estimateTime INTEGER
 );

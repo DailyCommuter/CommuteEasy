@@ -1,9 +1,14 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 )
 from werkzeug.exceptions import abort
 
 from dotenv import load_dotenv
+
+from db import createRoute
+
+import sqlite3
+
 import os
 # change whenever we change the name of the app
 from DailyCommuter.auth import login_required
@@ -32,7 +37,23 @@ def index():
     return render_template('home/index.html', trip_update = trip_update)
 
 MAPBOX_TOKEN = os.getenv("MAPBOX_TOKEN")
+TRANSIT_TOKEN = os.getenv("TRANSIT_TOKEN")
 
 @bp.route('/map/')
 def map_view():
     return render_template('home/map.html', MAPBOX_TOKEN = MAPBOX_TOKEN)
+@bp.route('/addRoute', methods=['GET', 'POST'])
+def createRouteForm():
+    if request.method == 'POST':
+        start_address = request.form['start_address']
+        end_address = request.form['end_address']
+        arriveby = request.form['arrival_time']
+
+        try:
+            createRoute(start_address, end_address, arriveby)
+            return redirect('/') #should go to saved routes page
+        except Exception as e:
+            return f"Error: {e}", 500
+    return render_template('addroute.html')
+
+

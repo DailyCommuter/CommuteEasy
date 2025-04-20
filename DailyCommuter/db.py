@@ -368,7 +368,10 @@ def init_db():
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
+
+
     get_all_subway_stops()
+
 
 
 # Set up the command 'init-db' for the Flask CLI
@@ -404,3 +407,35 @@ def close_db(e=None):
 
     if db is not None:
         db.close()
+
+def geocoder(address):
+    url = "https://nominatim.openstreetmap.org/search"
+    params = {
+        'q': address,
+        'format': 'json',
+        'limit': 1
+    }
+    headers = {
+        'User-Agent': 'DailyCommuter chz9577@nyu.edu'
+    }
+    response = requests.get(url, params=params, headers=headers)
+    data = response.json()
+    if data:
+        lat = float(data[0]['lat'])
+        lon = float(data[0]['lon'])
+        return lat, lon
+    else:
+        raise ValueError("Could not geocode address")
+
+def createRoute(start_address, end_address, arriveby):
+    start_lat, start_lon = geocoder(start_address)
+    end_lat, end_lon = geocoder(end_address)
+
+    conn = sqlite3.connect('routes.db')
+    c = conn.cursor()
+    c.execute('''
+                INSERT INTO routes (start_address, start_lat, start_lon, end_address, end_lat, end_lon, arrival_time)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', (start_address, start_lat, start_lon, end_address, end_lat, end_lon, arriveby))
+    conn.commit()
+    conn.close()

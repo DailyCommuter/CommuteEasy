@@ -425,17 +425,17 @@ def geocoder(address):
         lon = float(data[0]['lon'])
         return lat, lon
     else:
-        raise ValueError("Could not geocode address")
+        raise ValueError("Could not geocode address", address)
 
-def createRoute(start_address, end_address, arriveby):
+def createRoute(start_address, end_address, arriveby, userid):
     start_lat, start_lon = geocoder(start_address)
     end_lat, end_lon = geocoder(end_address)
 
-    conn = sqlite3.connect('routes.db')
+    conn = get_db()
     c = conn.cursor()
     c.execute('''
-                INSERT INTO routes (start_address, start_lat, start_lon, end_address, end_lat, end_lon, arrival_time)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            ''', (start_address, start_lat, start_lon, end_address, end_lat, end_lon, arriveby))
+                INSERT INTO routes (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arrival_time, userid)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arriveby, userid))
     conn.commit()
     conn.close()

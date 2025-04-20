@@ -5,15 +5,11 @@ from werkzeug.exceptions import abort
 
 from dotenv import load_dotenv
 
-from db import createRoute
-
-import sqlite3
-
 import os
 # change whenever we change the name of the app
 from DailyCommuter.auth import login_required
 from DailyCommuter.db import (
-  get_db, update_all_feeds
+  get_db, update_all_feeds, createRoute
 )
 
 load_dotenv()
@@ -42,15 +38,17 @@ TRANSIT_TOKEN = os.getenv("TRANSIT_TOKEN")
 @bp.route('/map/')
 def map_view():
     return render_template('home/map.html', MAPBOX_TOKEN = MAPBOX_TOKEN)
+
 @bp.route('/addRoute', methods=['GET', 'POST'])
 def createRouteForm():
     if request.method == 'POST':
         start_address = request.form['start_address']
         end_address = request.form['end_address']
         arriveby = request.form['arrival_time']
+        userid = '69' #joke user id, to be replaced once users are implemented
 
         try:
-            createRoute(start_address, end_address, arriveby)
+            createRoute(start_address, end_address, arriveby, userid)
             return redirect('/') #should go to saved routes page
         except Exception as e:
             return f"Error: {e}", 500

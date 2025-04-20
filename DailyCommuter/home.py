@@ -9,7 +9,7 @@ import os
 # change whenever we change the name of the app
 from DailyCommuter.auth import login_required
 from DailyCommuter.db import (
-  get_db, update_all_feeds, createRoute
+  get_db, update_all_feeds, createRoute, getRoute, Router
 )
 
 load_dotenv()
@@ -48,10 +48,12 @@ def createRouteForm():
         userid = '69' #joke user id, to be replaced once users are implemented
 
         try:
-            createRoute(start_address, end_address, arriveby, userid)
+            newroute = createRoute(start_address, end_address, arriveby, userid)
+            print(Router(newroute))
             return redirect('/') #should go to saved routes page
         except Exception as e:
             return f"Error: {e}", 500
     return render_template('addroute.html')
+
 
 

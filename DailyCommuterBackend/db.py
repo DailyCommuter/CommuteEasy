@@ -1,6 +1,5 @@
 import sqlite3
 from datetime import datetime
-from google.transit import gtfs_realtime_pb2
 import click
 from flask import current_app, g
 
@@ -23,11 +22,13 @@ def init_app(app):
 # Initialize the db
 def init_db():
     db = get_db()
+    db.execute('pragma foreign_keys=ON')
 
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
     get_all_subway_stops()
+
 
 
 # Set up the command 'init-db' for the Flask CLI

@@ -1,9 +1,17 @@
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS post;
+DROP TABLE IF EXISTS subway_alerts;
+DROP TABLE IF EXISTS trip_update;
+DROP TABLE IF EXISTS stop_update;
+DROP TABLE IF EXISTS vehicle_update;
+DROP TABLE IF EXISTS subway_stops;
+DROP TABLE IF EXISTS subway_routes;
+DROP TABLE IF EXISTS subway_trips;
+DROP TABLE IF EXISTS subway_stop_times;
+DROP TABLE IF EXISTS routes;
 
 
 CREATE TABLE user (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    userid INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
 );
@@ -54,8 +62,8 @@ CREATE TABLE subway_stops (
     stop_name TEXT NOT NULL,
     display_name TEXT NOT NULL,
     latitude REAL,
-    longitude REAL,
-)
+    longitude REAL
+);
 
 
 -- From routs.csv (like A, C, 2, Q, etc.)
@@ -63,8 +71,8 @@ CREATE TABLE subway_routes (
     route_id TEXT PRIMARY KEY,
     route_short_name TEXT NOT NULL,
     route_long_name TEXT NOT NULL,
-    route_color TEXT NOT NULL,
-)
+    route_color TEXT NOT NULL
+);
 
 
 -- From trips.csv
@@ -77,7 +85,7 @@ CREATE TABLE subway_trips (
     direction INTEGER NOT NULL,
     shape_id TEXT NOT NULL,
     FOREIGN KEY (route_id) REFERENCES subway_routes(route_id)
-)
+);
 
 
 -- From stop_times.csv
@@ -91,4 +99,20 @@ CREATE TABLE subway_stop_times (
     PRIMARY KEY (trip_id, stop_sequence),
     FOREIGN KEY (trip_id) REFERENCES subway_trips(trip_id),
     FOREIGN KEY (stop_id) REFERENCES subway_stops(gtfs_stop_id)
-)
+);
+
+
+CREATE TABLE routes (
+	routeid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	start_address TEXT NOT NULL,
+	end_address TEXT NOT NULL,
+	arrival_time TEXT NOT NULL,
+	start_lat REAL,
+	start_lon REAL,
+	end_lat REAL,
+	end_lon REAL,
+	userid INTEGER NOT NULL,
+    bestTime INTEGER,
+    estimateTime INTEGER
+    FOREIGN KEY (userid) REFERENCES user(userid)
+);

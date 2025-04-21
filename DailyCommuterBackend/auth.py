@@ -6,7 +6,7 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # change whenever we change the name of the app
-from DailyCommuter_Backend.db import get_db
+from DailyCommuterBackend.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 

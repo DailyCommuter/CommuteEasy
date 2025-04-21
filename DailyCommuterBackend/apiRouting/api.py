@@ -1,13 +1,22 @@
-import sqlite3
-from datetime import datetime
-from google.transit import gtfs_realtime_pb2
 import config
 import os
-from numpy import sqrt
-from dotenv import load_dotenv
-from db import get_db
-
+import time
+import datetime
+import json
 import requests
+import sqlite3
+from dotenv import load_dotenv
+from google.transit import gtfs_realtime_pb2
+from flask import jsonify
+from db import get_db
+from DailyCommuterBackend.models import Route
+
+
+# API key must be given to server when deploying
+load_dotenv()
+BUS_FEED_KEY = os.getenv("BUS_FEED_KEY")
+TRANSIT_TOKEN = os.getenv("TRANSIT_TOKEN")
+
 
 # URLs for all api calls
 train_update_urls = [
@@ -30,11 +39,6 @@ elev_escal_json_urls = [
     config.ELEV_ESCAL_CURRENT_OUTAGES_JSON,
     config.ELEV_ESCAL_UPCOMING_OUTAGES_JSON,
     config.ELEV_ESCAL_EQUIPMENTS_OUTAGES_JSON,]
-
-# The bus api still requires an api key, thus the need for dotenv
-# API key must be given to server when deploying
-load_dotenv()
-BUS_FEED_KEY = os.getenv("BUS_FEED_KEY")
 
 
 def fetch_data(endpoint, key=None):
@@ -329,81 +333,104 @@ def update_all_feeds():
     #     update_service_alerts(fetch_data(url))
 
 
-# Find the SUBWAY stop that is closest to the given latitude and longitude
-# @param lat: latitude of your current location
-# @param lon: longitude of your current location
-# @return tuple: gtfs_stop_id, latitude, and longitude for the closest stop
-def closest_sub_stop(lat, lon):
+def geocoder(address):
+    url = "https://nominatim.openstreetmap.org/search"
+    params = {
+        'q': address,
+        'format': 'json',
+        'limit': 1
+    }
+    headers = {
+        'User-Agent': 'DailyCommuter chz9577@nyu.edu'
+    }
+    response = requests.get(url, params=params, headers=headers)
+    data = response.json()
+    if data:
+        lat = float(data[0]['lat'])
+        lon = float(data[0]['lon'])
+        return lat, lon
+    else:
+        raise ValueError("Could not geocode address", address)
+
+
+def createRoute(start_address, end_address, arriveby, userid):
+    start_lat, start_lon = geocoder(start_address)
+    time.sleep(1) #prevent going over API limit
+    end_lat, end_lon = geocoder(end_address)
+
+    conn = get_db()
+    c = conn.cursor()
+    c.execute('''
+                INSERT INTO routes (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arrival_time, userid)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arriveby, userid))
+    route_id = c.lastrowid
+    conn.commit()
+    return getRoute(route_id)
+
+
+def getRoute(route_id):
+    conn = get_db()
+    c = conn.cursor()
+    c.execute('''
+        SELECT routeid, start_address, end_address,
+               start_lat, start_lon, end_lat, end_lon,
+               arrival_time, userid
+        FROM routes
+        WHERE routeid = ?
+    ''', (route_id,))
+
+    row = c.fetchone()
+    if row:
+        return Route(*row)
+    else:
+        return None
+
+
+def Router(route):
+    url = "https://external.transitapp.com/v3/otp/plan"
+    headers = {
+        "apiKey": TRANSIT_TOKEN
+    }
+    params = {
+        'fromPlace': f"{route.start_lat},{route.start_lon}",
+        'toPlace': f"{route.end_lat},{route.end_lon}",
+        'arriveBy': 'true',
+        'time': route.arrival_time,
+        'date': datetime.today()
+    }
+
+
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        data = response.json()
+
+        with open('test_route_response.json', 'w') as f:
+            json.dump(data, f, indent=2)
+        print("✅ Saved response to test_route_response.json", flush=True)
+        return jsonify(response.json())
+    except requests.exceptions.RequestException as e:
+        print("❌ Request Error:", e, flush=True)
+        return jsonify({"error": str(e)}), 500
+
+
+# maybe get route name (if implemented)
+# @param userid: user id of requester
+# @return tuple: start_address, end_address, arrival_time
+def get_saved_routes(userid):
     try:
         with get_db() as db:
-            rows = db.execute(
-                "SELECT latitude, longitude, gtfs_stop_id FROM subway_stops"
-            ).fetchall()
+            routes = db.execute('''
+                SELECT start_address, end_address, arrival_time
+                FROM routes
+                WHERE userid = ?
+                ''', 
+                (userid,)).fetchall()
     except sqlite3.IntegrityError as e:
         print(f"Integrity Error: {e}")
     except Exception as e:
         print(f"Error updating database: {e}")
-
     finally:
-        closest_stop_location = 10000 # arbitrary large distance
-        closest_stop_gtfs_id = "no_closest_stop_id"
-        closest_lat = 0
-        closest_lon = 0
-        given_location = sqrt(lat**2 + lon**2)
-        for row in rows:
+        return routes
 
-            cur_location = sqrt(row["latitude"]**2 + row["longitude"]**2)
-            distance_to_stop = abs(given_location - cur_location)
-
-            if distance_to_stop < closest_stop_location:
-                closest_stop_location = distance_to_stop
-                closest_stop_gtfs_id = row["gtfs_stop_id"]
-                closest_lat = row["latitude"]
-                closest_lon = row["longitude"]
-
-        return closest_stop_gtfs_id, closest_lat, closest_lon
-
-
-# Returns a list of route IDs and short names (like 'A', 'C', 'Q') that stop at gtfs_stop_id.
-# return routes and colors
-def get_subway_routes_from_stop_id(gtfs_stop_id):
-    try:
-        with get_db() as db:
-            rows = db.execute(
-                    "SELECT DISTINCT subway_routes.route_id, subway_routes.route_short_name"
-                    "FROM subway_stop_times st"
-                    "JOIN subway_trips t ON st.trip_id = t.trip_id"
-                    "JOIN subway_routes r ON t.route_id = r.route_id"
-                    "WHERE st.stop_id = ?",
-                    (gtfs_stop_id,)
-                ).fetchall()
-    except sqlite3.IntegrityError as e:
-        print(f"Integrity Error: {e}")
-    except Exception as e:
-        print(f"Error updating database: {e}")
-
-    finally:
-        return 
-
-
-# Route:
-#   Receive latitude and longitude from Front End, for both, the trip start, and trip end
-#   Identify 2 stops that are closest to start and end
-#   (Find all stops that are between the 2)
-#   Get the arrival times of trains at start and end stops
-#   Get the estimated travel time from start to end
-def closest_subway_stops_from_map(start_lat, start_lon, end_lat, end_lon):
-    # Get the closest start and end stops (lat, lon, and GTFS_id)
-    closest_start_stop = closest_sub_stop(start_lat, start_lon)
-    closest_end_stop = closest_sub_stop(end_lat, end_lon)
-
-    start_stop_times = get_subway_routes_from_stop_id()
-    end_stop_times = get_subway_routes_from_stop_id()
-
-    # Get routes that service the closest start and end stops
-    trains_at_closest_start = ""
-    trains_at_closest_end = ""
-    
-
-    # Get the arrival times of trains at start and end stops
-    # Get the estimated travel time from start to end

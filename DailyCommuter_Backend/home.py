@@ -5,9 +5,7 @@ from werkzeug.exceptions import abort
 
 # change whenever we change the name of the app
 from DailyCommuter_Backend.auth import login_required
-from DailyCommuter_Backend.db import (
-  get_db, update_all_feeds
-)
+from DailyCommuter_Backend.db import get_db
 
 bp = Blueprint('home', __name__)
 
@@ -16,7 +14,6 @@ bp = Blueprint('home', __name__)
 def index():
     # Update the databases when the home page loads
     # TODO implement updating the db at some interval (maybe every 2 minutes?)
-    update_all_feeds()
     db = get_db()
     trip_update = db.execute(
         'SELECT *'

@@ -48,21 +48,47 @@ CREATE TABLE vehicle_update (
 );
 
 
+-- From stops.csv
 CREATE TABLE subway_stops (
+    gtfs_stop_id TEXT PRIMARY KEY,
     stop_name TEXT NOT NULL,
     display_name TEXT NOT NULL,
-    gtfs_stop_id TEXT NOT NULL,
-    route_id TEXT NOT NULL,
-    latitude INTEGER NOT NULL,
-    longitude INTEGER NOT NULL,
-    ada_number INTEGER NOT NULL,
-    ada_notes TEXT
+    latitude REAL,
+    longitude REAL,
 )
 
 
+-- From routs.csv (like A, C, 2, Q, etc.)
 CREATE TABLE subway_routes (
-    route_id TEXT NOT NULL,
+    route_id TEXT PRIMARY KEY,
     route_short_name TEXT NOT NULL,
     route_long_name TEXT NOT NULL,
     route_color TEXT NOT NULL,
+)
+
+
+-- From trips.csv
+-- Maps each trip to a route (a trip is a specific instance of a vehicle's movement)
+CREATE TABLE subway_trips (
+    trip_id	TEXT PRIMARY KEY,
+    route_id INTEGER NOT NULL,
+    service_id TEXT NOT NULL,
+    trip_headsign TEXT NOT NULL,
+    direction INTEGER NOT NULL,
+    shape_id TEXT NOT NULL,
+    FOREIGN KEY (route_id) REFERENCES subway_routes(route_id)
+)
+
+
+-- From stop_times.csv
+-- Maps each stop to a trip (defines the stop sequence in a trip)
+CREATE TABLE subway_stop_times (
+    trip_id	TEXT NOT NULL,
+    stop_id	TEXT NOT NULL,
+    arrival_time TEXT NOT NULL,
+    departure_time TEXT NOT NULL,
+    stop_sequence INTEGER NOT NULL,
+    PRIMARY KEY (trip_id, stop_sequence),
+    FOREIGN KEY (trip_id) REFERENCES subway_trips(trip_id),
+    FOREIGN KEY (stop_id) REFERENCES subway_stops(gtfs_stop_id)
 )

@@ -345,7 +345,7 @@ def closest_sub_stop(lat, lon):
         print(f"Error updating database: {e}")
 
     finally:
-        closest_stop_location = 10000
+        closest_stop_location = 10000 # arbitrary large distance
         closest_stop_gtfs_id = "no_closest_stop_id"
         closest_lat = 0
         closest_lon = 0
@@ -364,6 +364,28 @@ def closest_sub_stop(lat, lon):
         return closest_stop_gtfs_id, closest_lat, closest_lon
 
 
+# Returns a list of route IDs and short names (like 'A', 'C', 'Q') that stop at gtfs_stop_id.
+# return routes and colors
+def get_subway_routes_from_stop_id(gtfs_stop_id):
+    try:
+        with get_db() as db:
+            rows = db.execute(
+                    "SELECT DISTINCT subway_routes.route_id, subway_routes.route_short_name"
+                    "FROM subway_stop_times st"
+                    "JOIN subway_trips t ON st.trip_id = t.trip_id"
+                    "JOIN subway_routes r ON t.route_id = r.route_id"
+                    "WHERE st.stop_id = ?",
+                    (gtfs_stop_id,)
+                ).fetchall()
+    except sqlite3.IntegrityError as e:
+        print(f"Integrity Error: {e}")
+    except Exception as e:
+        print(f"Error updating database: {e}")
+
+    finally:
+        return 
+
+
 # Route:
 #   Receive latitude and longitude from Front End, for both, the trip start, and trip end
 #   Identify 2 stops that are closest to start and end
@@ -371,9 +393,17 @@ def closest_sub_stop(lat, lon):
 #   Get the arrival times of trains at start and end stops
 #   Get the estimated travel time from start to end
 def closest_subway_stops_from_map(start_lat, start_lon, end_lat, end_lon):
+    # Get the closest start and end stops (lat, lon, and GTFS_id)
     closest_start_stop = closest_sub_stop(start_lat, start_lon)
     closest_end_stop = closest_sub_stop(end_lat, end_lon)
+
+    start_stop_times = get_subway_routes_from_stop_id()
+    end_stop_times = get_subway_routes_from_stop_id()
+
+    # Get routes that service the closest start and end stops
+    trains_at_closest_start = ""
+    trains_at_closest_end = ""
     
-    # get routes that service the closest start and end stops
+
     # Get the arrival times of trains at start and end stops
     # Get the estimated travel time from start to end

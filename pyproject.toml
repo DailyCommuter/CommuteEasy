@@ -4,7 +4,8 @@ version = "0.0.1"
 authors = [
   { name="Conor Zhang", email="chz9577@nyu.edu" },
   { name="Emmanuel Owusu-Ampaw", email="eo2361@nyu.edu" },
-  { name="Boruch Khazanovich", email="bk2780@nyu.edu" }
+  { name="Boruch Khazanovich", email="bk2780@nyu.edu" },
+  { name="Nissim Ram", email="nram2981@nyu.edu" },
 ]
 description = "A project to showcase working with the MTA API to create an application."
 dependencies = [

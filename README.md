@@ -27,7 +27,7 @@ A web application to offer real-time updates, schedules, and transit information
 
 ## Development
 
-Run the following commands in your terminal
+For local development, run the following commands in your terminal
 
 ```cmd
 pip install virtualenv
@@ -37,7 +37,7 @@ venv\Scripts\activate
 pip install -r requirements.txt
 
 <!-- Initialize the database -->
-flask --app DailyCommuter init-db
+flask --app DailyCommuterBackend init-db
 <!-- Start the app -->
-flask --app DailyCommuter run --debug
+flask --app DailyCommuterBackend run --debug
 ```

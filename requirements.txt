@@ -11,6 +11,7 @@ gtfs-realtime-bindings
 datetime
 numpy
 requests
+firebase_admin
 
 # chache based on stations vs users
 beautifulsoup4==4.13.3

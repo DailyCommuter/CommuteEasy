@@ -1,5 +1,11 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS post;
+DROP TABLE IF EXISTS subway_alerts;
+DROP TABLE IF EXISTS trip_update;
+DROP TABLE IF EXISTS stop_update;
+DROP TABLE IF EXISTS vehicle_update;
+DROP TABLE IF EXISTS all_subway_stops;
+DROP TABLE IF EXISTS routes;
 
 
 CREATE TABLE user (
@@ -56,4 +62,17 @@ CREATE TABLE all_subway_stops (
     longitude INTEGER NOT NULL,
     ada_number INTEGER NOT NULL,
     ada_notes TEXT
-)
+);
+
+CREATE TABLE routes (
+	routeid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	start_address TEXT NOT NULL,
+	end_address TEXT NOT NULL,
+	arrival_time TEXT NOT NULL,
+	start_lat REAL,
+	start_lon REAL,
+	end_lat REAL,
+	end_lon REAL,
+	userid INTEGER NOT NULL
+	, bestTime INTEGER, estimateTime INTEGER
+);

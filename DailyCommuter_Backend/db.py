@@ -2,11 +2,13 @@ import sqlite3
 from datetime import datetime
 from google.transit import gtfs_realtime_pb2
 import click
+import time
 import config
 import os
+from DailyCommuter_Backend.models import Route
 from dotenv import load_dotenv
-from flask import current_app, g
-
+from flask import current_app, g, jsonify
+import json
 import requests
 
 
@@ -368,7 +370,10 @@ def init_db():
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
+
+
     get_all_subway_stops()
+
 
 
 # Set up the command 'init-db' for the Flask CLI
@@ -404,3 +409,84 @@ def close_db(e=None):
 
     if db is not None:
         db.close()
+
+def geocoder(address):
+    url = "https://nominatim.openstreetmap.org/search"
+    params = {
+        'q': address,
+        'format': 'json',
+        'limit': 1
+    }
+    headers = {
+        'User-Agent': 'DailyCommuter chz9577@nyu.edu'
+    }
+    response = requests.get(url, params=params, headers=headers)
+    data = response.json()
+    if data:
+        lat = float(data[0]['lat'])
+        lon = float(data[0]['lon'])
+        return lat, lon
+    else:
+        raise ValueError("Could not geocode address", address)
+
+def createRoute(start_address, end_address, arriveby, userid):
+    start_lat, start_lon = geocoder(start_address)
+    time.sleep(1) #prevent going over API limit
+    end_lat, end_lon = geocoder(end_address)
+
+    conn = get_db()
+    c = conn.cursor()
+    c.execute('''
+                INSERT INTO routes (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arrival_time, userid)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arriveby, userid))
+    route_id = c.lastrowid
+    conn.commit()
+    return getRoute(route_id)
+
+def getRoute(route_id):
+    conn = get_db()
+    c = conn.cursor()
+    c.execute('''
+        SELECT routeid, start_address, end_address,
+               start_lat, start_lon, end_lat, end_lon,
+               arrival_time, userid
+        FROM routes
+        WHERE routeid = ?
+    ''', (route_id,))
+
+    row = c.fetchone()
+    if row:
+        return Route(*row)
+    else:
+        return None
+
+TRANSIT_TOKEN = os.getenv("TRANSIT_TOKEN")
+
+
+def Router(route):
+    url = "https://external.transitapp.com/v3/otp/plan"
+    headers = {
+        "apiKey": TRANSIT_TOKEN
+    }
+    params = {
+        'fromPlace': f"{route.start_lat},{route.start_lon}",
+        'toPlace': f"{route.end_lat},{route.end_lon}",
+        'arriveBy': 'true',
+        'time': route.arrival_time,
+        'date': datetime.today()
+    }
+
+
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        data = response.json()
+
+        with open('test_route_response.json', 'w') as f:
+            json.dump(data, f, indent=2)
+        print("✅ Saved response to test_route_response.json", flush=True)
+        return jsonify(response.json())
+    except requests.exceptions.RequestException as e:
+        print("❌ Request Error:", e, flush=True)
+        return jsonify({"error": str(e)}), 500

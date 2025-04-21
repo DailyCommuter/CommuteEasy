@@ -1,0 +1,879 @@
+{
+  "plan": {
+    "date": 1745189913000,
+    "from": {
+      "lat": 40.6787075,
+      "lon": -73.9492039,
+      "name": "",
+      "vertexType": "NORMAL"
+    },
+    "itineraries": [
+      {
+        "accessibility": "None",
+        "duration": 3135,
+        "endTime": 1745193070000,
+        "legs": [
+          {
+            "distance": 325,
+            "duration": 339,
+            "endTime": 1745190274000,
+            "from": {
+              "lat": 40.6785891810555,
+              "lon": -73.94921533763409,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "legGeometry": {
+              "length": 25,
+              "points": "c`hwFrejbMAFAbA??aES??C???G?KA??C???uBI??E???IBMF??C@??M@??NrD"
+            },
+            "mode": "WALK",
+            "startTime": 1745189935000,
+            "steps": [],
+            "to": {
+              "lat": 40.68054852626386,
+              "lon": -73.94951943308115,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "transitLeg": false
+          },
+          {
+            "agencyId": "MTAS:MTA NYCT",
+            "agencyName": "MTA New York City Transit",
+            "agencyTimeZoneOffset": -14400000,
+            "agencyUrl": "http://transitapp.com",
+            "arrivalDelay": -86,
+            "departureDelay": -86,
+            "distance": 20958.23425043762,
+            "duration": 2280,
+            "endTime": 1745192554000,
+            "from": {
+              "globalStopId": "MTAS:18701",
+              "lat": 40.68044061390353,
+              "lon": -73.9504277041255,
+              "name": "Nostrand Av",
+              "stopCode": "",
+              "stopId": "MTAS:A46N",
+              "stopIndex": 10,
+              "vertexType": "TRANSIT"
+            },
+            "globalRouteId": "MTAS:2234",
+            "headsign": "Inwood-207 St",
+            "interlineWithPreviousLeg": false,
+            "intermediateStops": [
+              {
+                "globalStopId": "MTAS:18705",
+                "lat": 40.68848053770284,
+                "lon": -73.98499757782186,
+                "name": "Hoyt-Schermerhorn Sts",
+                "stopCode": "",
+                "stopId": "MTAS:A42N",
+                "stopIndex": 11,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18706",
+                "lat": 40.6923386219421,
+                "lon": -73.98734480389749,
+                "name": "Jay St-MetroTech",
+                "stopCode": "",
+                "stopId": "MTAS:A41N",
+                "stopIndex": 12,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18707",
+                "lat": 40.69933533415224,
+                "lon": -73.99052839788513,
+                "name": "High St",
+                "stopCode": "",
+                "stopId": "MTAS:A40N",
+                "stopIndex": 13,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18708",
+                "lat": 40.71019912380499,
+                "lon": -74.00768742988633,
+                "name": "Fulton St",
+                "stopCode": "",
+                "stopId": "MTAS:A38N",
+                "stopIndex": 14,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18709",
+                "lat": 40.71411116726438,
+                "lon": -74.00858675022182,
+                "name": "Chambers St",
+                "stopCode": "",
+                "stopId": "MTAS:A36N",
+                "stopIndex": 15,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18710",
+                "lat": 40.72082009696716,
+                "lon": -74.00523228537044,
+                "name": "Canal St",
+                "stopCode": "",
+                "stopId": "MTAS:A34N",
+                "stopIndex": 16,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18712",
+                "lat": 40.73234039046483,
+                "lon": -74.0004928672024,
+                "name": "W 4 St-Wash Sq",
+                "stopCode": "",
+                "stopId": "MTAS:A32N",
+                "stopIndex": 17,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18713",
+                "lat": 40.74089292685536,
+                "lon": -74.0016889632486,
+                "name": "14 St",
+                "stopCode": "",
+                "stopId": "MTAS:A31N",
+                "stopIndex": 18,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18715",
+                "lat": 40.75228731550606,
+                "lon": -73.993388236552,
+                "name": "34 St-Penn Station",
+                "stopCode": "",
+                "stopId": "MTAS:A28N",
+                "stopIndex": 19,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18716",
+                "lat": 40.75730552297811,
+                "lon": -73.9897369959899,
+                "name": "42 St-Port Authority Bus Terminal",
+                "stopCode": "",
+                "stopId": "MTAS:A27N",
+                "stopIndex": 20,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18718",
+                "lat": 40.76829521747783,
+                "lon": -73.981733045004,
+                "name": "59 St-Columbus Circle",
+                "stopCode": "",
+                "stopId": "MTAS:A24N",
+                "stopIndex": 21,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18726",
+                "lat": 40.81111185865065,
+                "lon": -73.9523432564401,
+                "name": "125 St",
+                "stopCode": "",
+                "stopId": "MTAS:A15N",
+                "stopIndex": 22,
+                "vertexType": "TRANSIT"
+              }
+            ],
+            "legGeometry": {
+              "length": 103,
+              "points": "{khwFbmjbMYtMEbAkRl{AQt@qQnm@M`AQbC?bAb@nI?|BQpB_A~GMt@}L`c@c@t@k@b@u@Pq@BYEmBu@y@a@}@MaP_@mR[}@Bq@Nq@Xq@f@k@l@c@x@[|@UbAMfAY`NYdESjBcF`Xc@|AcAtC_ArBu@fAoAlAiY`WoL~He@f@u@jAsLvYUVg@\\e@HaACm@SsP{Lg@QoJaHq@YkDgCkAc@cAKgS`@g@Gie@wNyB{@{E}BoPeKo@Q{@SeA?{@Pi[vOs@Vq@Fq@Km@WerAe{@yAqAuIwFk@k@q@e@iFaDaDeB_z@cj@sCaBsFsD}@q@_cAmp@a{AgbA_@c@ukA_w@u@Wy@KiJP_@Co@MwDcCkCaC_BgBsBsBu@q@qIsFmw@qYaDuB"
+            },
+            "mode": "SUBWAY",
+            "realTime": true,
+            "route": "A",
+            "routeColor": "0039a6",
+            "routeId": "MTAS:A",
+            "routeLongName": "8 Avenue Express",
+            "routeShortName": "A",
+            "routeTextColor": "ffffff",
+            "routeType": 1,
+            "startTime": 1745190274000,
+            "steps": [],
+            "to": {
+              "globalStopId": "MTAS:18728",
+              "lat": 40.82478152775014,
+              "lon": -73.94421340060725,
+              "name": "145 St",
+              "stopCode": "",
+              "stopId": "MTAS:A12N",
+              "stopIndex": 23,
+              "vertexType": "TRANSIT"
+            },
+            "transitLeg": true,
+            "tripBlockId": "",
+            "tripId": "MTAS:L0S2-A-3054-S134_112350_A..N20X002",
+            "tripShortName": ""
+          },
+          {
+            "distance": 587,
+            "duration": 516,
+            "endTime": 1745193070000,
+            "from": {
+              "lat": 40.82391429094262,
+              "lon": -73.94500896334648,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "legGeometry": {
+              "length": 16,
+              "points": "yqdxFhfibMjDbD?CQG??iBvF??GPEP??aBhF??IVIZ??aD|J"
+            },
+            "mode": "WALK",
+            "startTime": 1745192554000,
+            "steps": [],
+            "to": {
+              "lat": 40.82600914883643,
+              "lon": -73.94972898066044,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "transitLeg": false
+          }
+        ],
+        "startTime": 1745189935000,
+        "transfers": 0,
+        "transitTime": 2280,
+        "walkTime": 855,
+        "wheelchairNeed": "None"
+      },
+      {
+        "accessibility": "None",
+        "duration": 3486,
+        "endTime": 1745193421000,
+        "legs": [
+          {
+            "distance": 325,
+            "duration": 339,
+            "endTime": 1745190274000,
+            "from": {
+              "lat": 40.6785891810555,
+              "lon": -73.94921533763409,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "legGeometry": {
+              "length": 25,
+              "points": "c`hwFrejbMAFAbA??aES??C???G?KA??C???uBI??E???IBMF??C@??M@??NrD"
+            },
+            "mode": "WALK",
+            "startTime": 1745189935000,
+            "steps": [],
+            "to": {
+              "lat": 40.68054852626386,
+              "lon": -73.94951943308115,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "transitLeg": false
+          },
+          {
+            "agencyId": "MTAS:MTA NYCT",
+            "agencyName": "MTA New York City Transit",
+            "agencyTimeZoneOffset": -14400000,
+            "agencyUrl": "http://transitapp.com",
+            "arrivalDelay": -86,
+            "departureDelay": -86,
+            "distance": 22798.76258543271,
+            "duration": 2460,
+            "endTime": 1745192734000,
+            "from": {
+              "globalStopId": "MTAS:18701",
+              "lat": 40.68044061390353,
+              "lon": -73.9504277041255,
+              "name": "Nostrand Av",
+              "stopCode": "",
+              "stopId": "MTAS:A46N",
+              "stopIndex": 10,
+              "vertexType": "TRANSIT"
+            },
+            "globalRouteId": "MTAS:2234",
+            "headsign": "Inwood-207 St",
+            "interlineWithPreviousLeg": false,
+            "intermediateStops": [
+              {
+                "globalStopId": "MTAS:18705",
+                "lat": 40.68848053770284,
+                "lon": -73.98499757782186,
+                "name": "Hoyt-Schermerhorn Sts",
+                "stopCode": "",
+                "stopId": "MTAS:A42N",
+                "stopIndex": 11,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18706",
+                "lat": 40.6923386219421,
+                "lon": -73.98734480389749,
+                "name": "Jay St-MetroTech",
+                "stopCode": "",
+                "stopId": "MTAS:A41N",
+                "stopIndex": 12,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18707",
+                "lat": 40.69933533415224,
+                "lon": -73.99052839788513,
+                "name": "High St",
+                "stopCode": "",
+                "stopId": "MTAS:A40N",
+                "stopIndex": 13,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18708",
+                "lat": 40.71019912380499,
+                "lon": -74.00768742988633,
+                "name": "Fulton St",
+                "stopCode": "",
+                "stopId": "MTAS:A38N",
+                "stopIndex": 14,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18709",
+                "lat": 40.71411116726438,
+                "lon": -74.00858675022182,
+                "name": "Chambers St",
+                "stopCode": "",
+                "stopId": "MTAS:A36N",
+                "stopIndex": 15,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18710",
+                "lat": 40.72082009696716,
+                "lon": -74.00523228537044,
+                "name": "Canal St",
+                "stopCode": "",
+                "stopId": "MTAS:A34N",
+                "stopIndex": 16,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18712",
+                "lat": 40.73234039046483,
+                "lon": -74.0004928672024,
+                "name": "W 4 St-Wash Sq",
+                "stopCode": "",
+                "stopId": "MTAS:A32N",
+                "stopIndex": 17,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18713",
+                "lat": 40.74089292685536,
+                "lon": -74.0016889632486,
+                "name": "14 St",
+                "stopCode": "",
+                "stopId": "MTAS:A31N",
+                "stopIndex": 18,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18715",
+                "lat": 40.75228731550606,
+                "lon": -73.993388236552,
+                "name": "34 St-Penn Station",
+                "stopCode": "",
+                "stopId": "MTAS:A28N",
+                "stopIndex": 19,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18716",
+                "lat": 40.75730552297811,
+                "lon": -73.9897369959899,
+                "name": "42 St-Port Authority Bus Terminal",
+                "stopCode": "",
+                "stopId": "MTAS:A27N",
+                "stopIndex": 20,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18718",
+                "lat": 40.76829521747783,
+                "lon": -73.981733045004,
+                "name": "59 St-Columbus Circle",
+                "stopCode": "",
+                "stopId": "MTAS:A24N",
+                "stopIndex": 21,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18726",
+                "lat": 40.81111185865065,
+                "lon": -73.9523432564401,
+                "name": "125 St",
+                "stopCode": "",
+                "stopId": "MTAS:A15N",
+                "stopIndex": 22,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18728",
+                "lat": 40.82478152775014,
+                "lon": -73.94421340060725,
+                "name": "145 St",
+                "stopCode": "",
+                "stopId": "MTAS:A12N",
+                "stopIndex": 23,
+                "vertexType": "TRANSIT"
+              }
+            ],
+            "legGeometry": {
+              "length": 115,
+              "points": "{khwFbmjbMYtMEbAkRl{AQt@qQnm@M`AQbC?bAb@nI?|BQpB_A~GMt@}L`c@c@t@k@b@u@Pq@BYEmBu@y@a@}@MaP_@mR[}@Bq@Nq@Xq@f@k@l@c@x@[|@UbAMfAY`NYdESjBcF`Xc@|AcAtC_ArBu@fAoAlAiY`WoL~He@f@u@jAsLvYUVg@\\e@HaACm@SsP{Lg@QoJaHq@YkDgCkAc@cAKgS`@g@Gie@wNyB{@{E}BoPeKo@Q{@SeA?{@Pi[vOs@Vq@Fq@Km@WerAe{@yAqAuIwFk@k@q@e@iFaDaDeB_z@cj@sCaBsFsD}@q@_cAmp@a{AgbA_@c@ukA_w@u@Wy@KiJP_@Co@MwDcCkCaC_BgBsBsBu@q@qIsFmw@qYcJaGuCyAuZuIoLkCiJ}CQC}@GqH|@u@B{Gu@kD@aAEiE{@"
+            },
+            "mode": "SUBWAY",
+            "realTime": true,
+            "route": "A",
+            "routeColor": "0039a6",
+            "routeId": "MTAS:A",
+            "routeLongName": "8 Avenue Express",
+            "routeShortName": "A",
+            "routeTextColor": "ffffff",
+            "routeType": 1,
+            "startTime": 1745190274000,
+            "steps": [],
+            "to": {
+              "globalStopId": "MTAS:18731",
+              "lat": 40.84071748409507,
+              "lon": -73.93956391447276,
+              "name": "168 St",
+              "stopCode": "",
+              "stopId": "MTAS:A09N",
+              "stopIndex": 24,
+              "vertexType": "TRANSIT"
+            },
+            "transitLeg": true,
+            "tripBlockId": "",
+            "tripId": "MTAS:L0S2-A-3054-S134_112350_A..N20X002",
+            "tripShortName": ""
+          },
+          {
+            "distance": 54,
+            "duration": 120,
+            "endTime": 1745192854000,
+            "from": {
+              "lat": 40.84071748409507,
+              "lon": -73.93956391447276,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "legGeometry": {
+              "length": 2,
+              "points": "mugxFbihbM\\zB"
+            },
+            "mode": "WALK",
+            "startTime": 1745192734000,
+            "steps": [],
+            "to": {
+              "lat": 40.84055560643468,
+              "lon": -73.9401304862841,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "transitLeg": false
+          },
+          {
+            "agencyId": "MTAS:MTA NYCT",
+            "agencyName": "MTA New York City Transit",
+            "agencyTimeZoneOffset": -14400000,
+            "agencyUrl": "http://transitapp.com",
+            "arrivalDelay": 0,
+            "departureDelay": 0,
+            "distance": 1778.999882619842,
+            "duration": 240,
+            "endTime": 1745193240000,
+            "from": {
+              "globalStopId": "MTAS:18004",
+              "lat": 40.84055560643468,
+              "lon": -73.9401304862841,
+              "name": "168 St-Washington Hts",
+              "stopCode": "",
+              "stopId": "MTAS:112S",
+              "stopIndex": 9,
+              "vertexType": "TRANSIT"
+            },
+            "globalRouteId": "MTAS:2224",
+            "headsign": "South Ferry",
+            "interlineWithPreviousLeg": false,
+            "intermediateStops": [
+              {
+                "globalStopId": "MTAS:18005",
+                "lat": 40.83404452720572,
+                "lon": -73.94488789085887,
+                "name": "157 St",
+                "stopCode": "",
+                "stopId": "MTAS:113S",
+                "stopIndex": 10,
+                "vertexType": "TRANSIT"
+              }
+            ],
+            "legGeometry": {
+              "length": 2,
+              "points": "otgxF~lhbMlvA`_A"
+            },
+            "mode": "SUBWAY",
+            "realTime": false,
+            "route": "1",
+            "routeColor": "ee352e",
+            "routeId": "MTAS:1",
+            "routeLongName": "Broadway - 7 Avenue Local",
+            "routeShortName": "1",
+            "routeTextColor": "ffffff",
+            "routeType": 1,
+            "startTime": 1745193000000,
+            "steps": [],
+            "to": {
+              "globalStopId": "MTAS:18006",
+              "lat": 40.82655318881106,
+              "lon": -73.95035575849866,
+              "name": "145 St",
+              "stopCode": "",
+              "stopId": "MTAS:114S",
+              "stopIndex": 11,
+              "vertexType": "TRANSIT"
+            },
+            "transitLeg": true,
+            "tripBlockId": "",
+            "tripId": "MTAS:L0S2-1-3038-S56_117650_1..S03X018",
+            "tripShortName": ""
+          },
+          {
+            "distance": 109,
+            "duration": 181,
+            "endTime": 1745193421000,
+            "from": {
+              "lat": 40.82619308318055,
+              "lon": -73.95036868751049,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "legGeometry": {
+              "length": 6,
+              "points": "a}dxF`mjbMhAA@EMG??r@wB"
+            },
+            "mode": "WALK",
+            "startTime": 1745193240000,
+            "steps": [],
+            "to": {
+              "lat": 40.82600914883643,
+              "lon": -73.94972898066044,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "transitLeg": false
+          }
+        ],
+        "startTime": 1745189935000,
+        "transfers": 1,
+        "transitTime": 2700,
+        "walkTime": 640,
+        "wheelchairNeed": "None"
+      },
+      {
+        "accessibility": "None",
+        "duration": 3631,
+        "endTime": 1745193940000,
+        "legs": [
+          {
+            "distance": 93,
+            "duration": 137,
+            "endTime": 1745190446000,
+            "from": {
+              "lat": 40.6785891810555,
+              "lon": -73.94921533763409,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "legGeometry": {
+              "length": 8,
+              "points": "c`hwFrejbMAF??@E????@?`@gE"
+            },
+            "mode": "WALK",
+            "startTime": 1745190309000,
+            "steps": [],
+            "to": {
+              "lat": 40.67858333293663,
+              "lon": -73.94922237843275,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "transitLeg": false
+          },
+          {
+            "agencyId": "MTALIRR:LI",
+            "agencyName": "Long Island Rail Road",
+            "agencyTimeZoneOffset": -14400000,
+            "agencyUrl": "http://transitapp.com",
+            "arrivalDelay": 206,
+            "departureDelay": 206,
+            "distance": 2392.037130146251,
+            "duration": 360,
+            "endTime": 1745190806000,
+            "from": {
+              "globalStopId": "MTALIRR:4592",
+              "lat": 40.67839016353861,
+              "lon": -73.94822436930355,
+              "name": "Nostrand Avenue",
+              "stopCode": "NAV",
+              "stopId": "MTALIRR:148",
+              "stopIndex": 2,
+              "vertexType": "TRANSIT"
+            },
+            "globalRouteId": "MTALIRR:2577",
+            "headsign": "Atlantic Terminal",
+            "interlineWithPreviousLeg": false,
+            "intermediateStops": [],
+            "legGeometry": {
+              "length": 5,
+              "points": "__hwFl_jbMm@jYw[thCq@`D]fA"
+            },
+            "mode": "RAIL",
+            "realTime": true,
+            "route": "City Terminal Zone",
+            "routeColor": "3c4145",
+            "routeId": "MTALIRR:12",
+            "routeLongName": "City Terminal Zone",
+            "routeShortName": "City Terminal Zone",
+            "routeTextColor": "ffffff",
+            "routeType": 2,
+            "startTime": 1745190446000,
+            "steps": [],
+            "to": {
+              "globalStopId": "MTALIRR:4593",
+              "lat": 40.68359722828111,
+              "lon": -73.9756716259428,
+              "name": "Atlantic Terminal",
+              "stopCode": "ATL",
+              "stopId": "MTALIRR:241",
+              "stopIndex": 3,
+              "vertexType": "TRANSIT"
+            },
+            "transitLeg": true,
+            "tripBlockId": "",
+            "tripId": "MTALIRR:GO304_25_8943",
+            "tripShortName": "8943"
+          },
+          {
+            "distance": 304,
+            "duration": 228,
+            "endTime": 1745191034000,
+            "from": {
+              "lat": 40.68362167855484,
+              "lon": -73.97566292434931,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "legGeometry": {
+              "length": 23,
+              "points": "s_iwF|jobME\\??AF???LER???D??BB??JBVFHB??D@??Vt@??MREGs@hM"
+            },
+            "mode": "WALK",
+            "startTime": 1745190806000,
+            "steps": [],
+            "to": {
+              "lat": 40.68336615999993,
+              "lon": -73.9765390008688,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "transitLeg": false
+          },
+          {
+            "agencyId": "MTAS:MTA NYCT",
+            "agencyName": "MTA New York City Transit",
+            "agencyTimeZoneOffset": -14400000,
+            "agencyUrl": "http://transitapp.com",
+            "arrivalDelay": -116,
+            "departureDelay": -116,
+            "distance": 18168.36064972468,
+            "duration": 2160,
+            "endTime": 1745193424000,
+            "from": {
+              "globalStopId": "MTAS:18958",
+              "lat": 40.68366917390795,
+              "lon": -73.97881025391366,
+              "name": "Atlantic Av-Barclays Ctr",
+              "stopCode": "",
+              "stopId": "MTAS:R31N",
+              "stopIndex": 14,
+              "vertexType": "TRANSIT"
+            },
+            "globalRouteId": "MTAS:2237",
+            "headsign": "Norwood-205 St",
+            "interlineWithPreviousLeg": false,
+            "intermediateStops": [
+              {
+                "globalStopId": "MTAS:18960",
+                "lat": 40.71826602721436,
+                "lon": -73.99375695788954,
+                "name": "Grand St",
+                "stopCode": "",
+                "stopId": "MTAS:D22N",
+                "stopIndex": 15,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18961",
+                "lat": 40.72529871223792,
+                "lon": -73.99620310920209,
+                "name": "Broadway-Lafayette St",
+                "stopCode": "",
+                "stopId": "MTAS:D21N",
+                "stopIndex": 16,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18962",
+                "lat": 40.73234039046483,
+                "lon": -74.0004928672024,
+                "name": "W 4 St-Wash Sq",
+                "stopCode": "",
+                "stopId": "MTAS:D20N",
+                "stopIndex": 17,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18963",
+                "lat": 40.74971525934654,
+                "lon": -73.9878214436753,
+                "name": "34 St-Herald Sq",
+                "stopCode": "",
+                "stopId": "MTAS:D17N",
+                "stopIndex": 18,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18964",
+                "lat": 40.75422085422737,
+                "lon": -73.98456590406082,
+                "name": "42 St-Bryant Pk",
+                "stopCode": "",
+                "stopId": "MTAS:D16N",
+                "stopIndex": 19,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18965",
+                "lat": 40.7586634966847,
+                "lon": -73.98132835085303,
+                "name": "47-50 Sts-Rockefeller Ctr",
+                "stopCode": "",
+                "stopId": "MTAS:D15N",
+                "stopIndex": 20,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18966",
+                "lat": 40.76286332265146,
+                "lon": -73.98163411976711,
+                "name": "7 Av",
+                "stopCode": "",
+                "stopId": "MTAS:D14N",
+                "stopIndex": 21,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18967",
+                "lat": 40.76829521747783,
+                "lon": -73.981733045004,
+                "name": "59 St-Columbus Circle",
+                "stopCode": "",
+                "stopId": "MTAS:A24N",
+                "stopIndex": 22,
+                "vertexType": "TRANSIT"
+              },
+              {
+                "globalStopId": "MTAS:18968",
+                "lat": 40.81111185865065,
+                "lon": -73.9523432564401,
+                "name": "125 St",
+                "stopCode": "",
+                "stopId": "MTAS:A15N",
+                "stopIndex": 23,
+                "vertexType": "TRANSIT"
+              }
+            ],
+            "legGeometry": {
+              "length": 78,
+              "points": "y_iwFl~obMsDwBgA]iAIeLz@y@\\q@l@e@x@qDlI{@nAgAx@_m@~UkEtAaA\\afBhx@_@LsBN}AG_@Iug@uSu@Ku@Jq@Vm@b@c@t@_FhRyArJ}Mf]q@v@u@n@cAPaAC[GwEuBiRsL_jDa{Bo@]i@Mg@?c@FcAh@[b@Ub@yGtSm@nAUTc@Zi@Lo@Bi@IwLyHi@QyJwGkAo@gRyLeAi@wiCidB_@c@ukA_w@u@Wy@KiJP_@Co@MwDcCkCaCcAgAc@YoBmB_@Ui@c@}HeFc@QgUmI[YwYoKeDmAgD{B"
+            },
+            "mode": "SUBWAY",
+            "realTime": true,
+            "route": "D",
+            "routeColor": "ff6319",
+            "routeId": "MTAS:D",
+            "routeLongName": "6 Avenue Express",
+            "routeShortName": "D",
+            "routeTextColor": "ffffff",
+            "routeType": 1,
+            "startTime": 1745191264000,
+            "steps": [],
+            "to": {
+              "globalStopId": "MTAS:18969",
+              "lat": 40.82478152775014,
+              "lon": -73.94421340060725,
+              "name": "145 St",
+              "stopCode": "",
+              "stopId": "MTAS:D13N",
+              "stopIndex": 24,
+              "vertexType": "TRANSIT"
+            },
+            "transitLeg": true,
+            "tripBlockId": "",
+            "tripId": "MTAS:L0S2-D-3042-S122_113100_D..N07R",
+            "tripShortName": ""
+          },
+          {
+            "distance": 587,
+            "duration": 516,
+            "endTime": 1745193940000,
+            "from": {
+              "lat": 40.82391429094262,
+              "lon": -73.94500896334648,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "legGeometry": {
+              "length": 16,
+              "points": "{qdxFnfibMlD|C?CQG??iBvF??GPEP??aBhF??IVIZ??aD|J"
+            },
+            "mode": "WALK",
+            "startTime": 1745193424000,
+            "steps": [],
+            "to": {
+              "lat": 40.82600914883643,
+              "lon": -73.94972898066044,
+              "name": "",
+              "vertexType": "NORMAL"
+            },
+            "transitLeg": false
+          }
+        ],
+        "startTime": 1745190309000,
+        "transfers": 1,
+        "transitTime": 2520,
+        "walkTime": 881,
+        "wheelchairNeed": "None"
+      }
+    ],
+    "to": {
+      "lat": 40.8259661,
+      "lon": -73.9497608,
+      "name": "",
+      "vertexType": "NORMAL"
+    }
+  }
+}

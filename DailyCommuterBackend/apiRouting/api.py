@@ -8,7 +8,7 @@ import sqlite3
 from dotenv import load_dotenv
 from google.transit import gtfs_realtime_pb2
 from flask import jsonify
-from db import get_db
+from DailyCommuterBackend.db import get_db
 from DailyCommuterBackend.models import Route
 
 
@@ -434,3 +434,38 @@ def get_saved_routes(userid):
     finally:
         return routes
 
+
+def get_all_subway_stops():
+    url = "https://external.transitapp.com/v3/public/stops_for_network"
+    headers = {
+        "apiKey": TRANSIT_TOKEN
+    }
+    params = {
+        'network_id': "NYC Subway|NYC"
+    }
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        stoplist = response.json()
+    except requests.exceptions.RequestException as e:
+        print("❌ Request Error:", e, flush=True)
+        return jsonify({"error": str(e)}), 500
+
+    try:
+        with get_db() as db:
+            for stop in stoplist["stops"]:
+                db.execute('''  
+                    INSERT INTO subway_stops (global_stop_id, parent_station_global_stop_id, route_type, rt_stop_id, stop_lat, stop_lon, stop_name, wheelchair_boarding)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    ''', (stop["global_stop_id"], 
+                          stop["parent_station_global_stop_id"], 
+                          stop["route_type"], 
+                          stop["rt_stop_id"], 
+                          stop["stop_lat"], 
+                          stop["stop_lon"], 
+                          stop["stop_name"], 
+                          stop["wheelchair_boarding"],))
+    except sqlite3.IntegrityError as e:
+        print(f"Integrity Error: {e}")
+    except Exception as e:
+        print(f"Error updating database: {e}")

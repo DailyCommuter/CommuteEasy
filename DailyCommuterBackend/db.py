@@ -8,10 +8,6 @@ from flask import current_app, g
 Functions for initialization and teardown of the app
 '''
 
-# for Gideok
-def get_all_subway_stops():
-    pass
-
 
 # Register close_db and init_db_command with the Application
 def init_app(app):
@@ -26,9 +22,6 @@ def init_db():
 
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
-
-    get_all_subway_stops()
-
 
 
 # Set up the command 'init-db' for the Flask CLI

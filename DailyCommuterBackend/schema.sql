@@ -56,17 +56,18 @@ CREATE TABLE vehicle_update (
 );
 
 
--- From stops.csv
 CREATE TABLE subway_stops (
-    gtfs_stop_id TEXT PRIMARY KEY,
+    global_stop_id TEXT PRIMARY KEY,
+    parent_station_global_stop_id TEXT NOT NULL,
+    route_type INTEGER NOT NULL,
+    rt_stop_id TEXT NOT NULL,
+    stop_lat REAL,
+    stop_lon REAL,
     stop_name TEXT NOT NULL,
-    display_name TEXT NOT NULL,
-    latitude REAL,
-    longitude REAL
+    wheelchair_boarding INTEGER
 );
 
 
--- From routs.csv (like A, C, 2, Q, etc.)
 CREATE TABLE subway_routes (
     route_id TEXT PRIMARY KEY,
     route_short_name TEXT NOT NULL,
@@ -75,7 +76,6 @@ CREATE TABLE subway_routes (
 );
 
 
--- From trips.csv
 -- Maps each trip to a route (a trip is a specific instance of a vehicle's movement)
 CREATE TABLE subway_trips (
     trip_id	TEXT PRIMARY KEY,
@@ -88,7 +88,6 @@ CREATE TABLE subway_trips (
 );
 
 
--- From stop_times.csv
 -- Maps each stop to a trip (defines the stop sequence in a trip)
 CREATE TABLE subway_stop_times (
     trip_id	TEXT NOT NULL,
@@ -113,6 +112,6 @@ CREATE TABLE routes (
 	end_lon REAL,
 	userid INTEGER NOT NULL,
     bestTime INTEGER,
-    estimateTime INTEGER
+    estimateTime INTEGER,
     FOREIGN KEY (userid) REFERENCES user(userid)
 );

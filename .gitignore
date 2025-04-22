@@ -175,3 +175,4 @@ cython_debug/
 
 # Testing files
 test_route_response.json
+/tests

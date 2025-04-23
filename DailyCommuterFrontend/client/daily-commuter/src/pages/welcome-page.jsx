@@ -4,6 +4,7 @@ import arrowLogo from "../assets/arrow.svg";
 import subwayGraphic from "../assets/subway-graphic.png";
 import LoginBox from "../components/login-box";
 import { useState } from "react";
+import {motion} from "framer-motion";
 
 export default function WelcomePage() {
   const [loginMenu, setLoginMenu] = useState(false);
@@ -39,6 +40,21 @@ export default function WelcomePage() {
         alignItems="center"
         justifyContent="center"
       >
+        {/* Animate Welcome Content / Tex */}
+        <motion.div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "absolute",
+            }}
+
+
+          initial = {{opacity: 0, y:20}}
+          animate = {{opacity: 1, y:0}}
+          transition =  {{duration: 1, delay:0.3}} //disolve / smoothdelay
+        >       
         {/* Intro content */}
         <Flex
           direction="column"
@@ -79,6 +95,9 @@ export default function WelcomePage() {
             <Image src={arrowLogo} alt="subway graphic" mt="10" />
           </Center>
         </Flex>
+        </motion.div> 
+
+        {/* Login Box */}
         <Box
           position="absolute"
           transition="all 0.4s ease-in-out"
@@ -86,7 +105,7 @@ export default function WelcomePage() {
           transform={loginMenu ? "translateY(0px)" : "translateY(20px)"}
           pointerEvents={loginMenu ? "auto" : "none"}
         >
-          <LoginBox />
+          <LoginBox  />
         </Box>
       </Box>
     </Box>

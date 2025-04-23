@@ -89,10 +89,25 @@ export default function WelcomePage() {
               backgroundColor="#6DCD65"
               borderRadius="33.5px"
               onClick={() => setLoginMenu(true)}
+              _hover={{
+                boxShadow:"0 0 20px #6DCD65",
+                transform:"scale(1.01)",
+                transition: "all 0.3s ease-in-out",
+              }}
             >
               Never Late Again
             </Button>
-            <Image src={arrowLogo} alt="subway graphic" mt="10" />
+            <Image 
+              src={arrowLogo} 
+              alt="subway graphic" 
+              mt="10"
+              onClick={() => setLoginMenu(true)}s
+              _hover={{
+                filter: "drop-shadow(0 0 10px white)",
+                transform: "scale(1.05)",
+                transition: "all 0.3s ease-in-out",
+              }}
+            />
           </Center>
         </Flex>
         </motion.div> 
@@ -105,7 +120,7 @@ export default function WelcomePage() {
           transform={loginMenu ? "translateY(0px)" : "translateY(20px)"}
           pointerEvents={loginMenu ? "auto" : "none"}
         >
-          <LoginBox  />
+          <LoginBox setLoginMenu={setLoginMenu} />
         </Box>
       </Box>
     </Box>

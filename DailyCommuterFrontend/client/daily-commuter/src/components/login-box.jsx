@@ -1,11 +1,16 @@
-import { Card, Center, Text, Image, HStack } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { Card, Center, Text, Image, HStack, Button } from "@chakra-ui/react";
 import logoGreen from "../assets/logo-green.png";
 import LoginForms from "./login-forms";
-export default function LoginBox() {
+
+
+export default function LoginBox({ setLoginMenu }) {
+  const navigate = useNavigate();
+
   return (
     <Card.Root
-      minW={"400px"}
       color={"white"}
+      minW={"400px"}
       pt={75}
       pb={50}
       borderRadius="33.5px"
@@ -17,7 +22,14 @@ export default function LoginBox() {
         <Center>
           <Card.Title>
             <HStack>
-              <Image src={logoGreen} alt="subway graphic" />
+              <Button
+                variant="ghost"
+                onClick={() => setLoginMenu(false)}
+                _hover={{ bg: "transparent" }}
+                _active={{ bg: "transparent" }}
+              >
+                <Image src={logoGreen} alt="subway graphic" />
+              </Button>
               <Text mt={2} textStyle="2xl">
                 Daily Commuter
               </Text>
@@ -25,7 +37,7 @@ export default function LoginBox() {
           </Card.Title>
         </Center>
       </Card.Header>
-      {/* LOGIN MAIN MENU */}
+
       <LoginForms />
     </Card.Root>
   );

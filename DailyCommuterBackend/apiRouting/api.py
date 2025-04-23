@@ -435,7 +435,7 @@ def get_saved_routes(userid):
         return routes
 
 
-def get_all_subway_stops():
+def get_saved_subway_stops():
     url = "https://external.transitapp.com/v3/public/stops_for_network"
     headers = {
         "apiKey": TRANSIT_TOKEN
@@ -448,7 +448,7 @@ def get_all_subway_stops():
         response.raise_for_status()
         stoplist = response.json()
     except requests.exceptions.RequestException as e:
-        print("❌ Request Error:", e, flush=True)
+        print("Request Error:", e, flush=True)
         return jsonify({"error": str(e)}), 500
 
     try:

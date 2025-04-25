@@ -541,7 +541,7 @@ def address_autocomplete(input_text):
             address = locations["features"][i]["properties"]["housenumber"],
             street = locations["features"][i]["properties"]["street"],
             city = locations["features"][i]["properties"]["city"],
-            zipcode = locations["features"][i]["properties"]["postcode"],
+            zipcode = locations["features"][i]["properties"]["postcode"]
             # state = locations["features"][i]["properties"]["state"],
             # country = locations["features"][i]["properties"]["countrycode"]
             result.append(f"{address} {street} {zipcode} {city}")

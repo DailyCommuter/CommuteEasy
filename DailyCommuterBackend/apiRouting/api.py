@@ -474,6 +474,7 @@ def get_saved_subway_stops():
 # This uses the public api from photon
 # We should eventually transition this to our own installation of the api
 #   since we dont want to overload the public api
+# Source is https://photon.komoot.io/, https://github.com/komoot/photon
 '''
 Returns this kind of data:
 {

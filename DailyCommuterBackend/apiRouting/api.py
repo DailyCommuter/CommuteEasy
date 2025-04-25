@@ -469,3 +469,81 @@ def get_saved_subway_stops():
         print(f"Integrity Error: {e}")
     except Exception as e:
         print(f"Error updating database: {e}")
+
+
+# This uses the public api from photon
+# We should eventually transition this to our own installation of the api
+#   since we dont want to overload the public api
+'''
+Returns this kind of data:
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          -73.95657522344695,
+          40.7691872
+        ],
+        "type": "Point"
+      },
+      "type": "Feature",
+      "properties": {
+        "osm_id": 266873992,
+        "extent": [
+          -73.9567115,
+          40.769335,
+          -73.9564424,
+          40.7690481
+        ],
+        "country": "United States",
+        "city": "New York",
+        "countrycode": "US",
+        "postcode": "10021",
+        "locality": "Lenox Hill",
+        "type": "house",
+        "osm_type": "W",
+        "osm_key": "building",
+        "housenumber": "319",
+        "street": "East 73rd Street",
+        "district": "Manhattan",
+        "osm_value": "apartments",
+        "state": "New York"
+      }
+    },
+    {...},
+    {...}
+    ]
+}
+'''
+def address_autocomplete(input_text):
+    url = "https://photon.komoot.io/api/?"
+    params = {
+        'q' : input_text,
+        'lat': "40.741975",     # location bias to Geographic Center of NYC
+        'lon': "-73.907326",
+        'limit': 5,             # limit 5 most relevant results
+        'lang' : "en",
+        'layer' : "house"       # filter by building address layer first
+    }
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        locations = response.json()
+    except requests.exceptions.RequestException as e:
+        print("Request Error:", e, flush=True)
+        return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        print(f"Error with address_autocomplete: {e}")
+    finally:
+        result = []
+        for i in range(len(locations["features"])):
+            cur_addr = {
+                'address' : locations["features"][i]["properties"]["housenumber"],
+                'street' : locations["features"][i]["properties"]["street"],
+                'city' : locations["features"][i]["properties"]["city"],
+                'state' : locations["features"][i]["properties"]["state"],
+                'zip' : locations["features"][i]["properties"]["postcode"],
+                'country' : locations["features"][i]["properties"]["countrycode"]
+            }
+            result.append(cur_addr)
+        return locations

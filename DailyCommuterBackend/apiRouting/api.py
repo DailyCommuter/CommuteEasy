@@ -538,13 +538,12 @@ def address_autocomplete(input_text):
     finally:
         result = []
         for i in range(len(locations["features"])):
-            cur_addr = {
-                'address' : locations["features"][i]["properties"]["housenumber"],
-                'street' : locations["features"][i]["properties"]["street"],
-                'city' : locations["features"][i]["properties"]["city"],
-                'state' : locations["features"][i]["properties"]["state"],
-                'zip' : locations["features"][i]["properties"]["postcode"],
-                'country' : locations["features"][i]["properties"]["countrycode"]
-            }
-            result.append(cur_addr)
+            address = locations["features"][i]["properties"]["housenumber"],
+            street = locations["features"][i]["properties"]["street"],
+            city = locations["features"][i]["properties"]["city"],
+            zipcode = locations["features"][i]["properties"]["postcode"],
+            # state = locations["features"][i]["properties"]["state"],
+            # country = locations["features"][i]["properties"]["countrycode"]
+            result.append(f"{address} {street} {zipcode} {city}")
         return locations
+    

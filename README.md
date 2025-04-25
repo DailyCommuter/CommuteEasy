@@ -28,7 +28,8 @@ A web application to offer real-time updates, schedules, and transit information
 ## Development
 
 Make sure you have Node/npm installed on your device
-If it is your first time starting the app run:
+If it is your first time starting the app, cd into DailyCommuterFrontend\client\daily-commuter
+Then run:
 
 ```cmd
 npm i

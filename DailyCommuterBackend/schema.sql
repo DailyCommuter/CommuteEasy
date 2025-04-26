@@ -115,3 +115,11 @@ CREATE TABLE routes (
     estimateTime INTEGER,
     FOREIGN KEY (userid) REFERENCES user(userid)
 );
+
+CREATE TABLE points(
+    FOREIGN KEY (routeid) REFERENCES routes(routeid) PRIMARY KEY,
+    lat REAL NOT NULL,
+    lon REAL NOT NULL,
+    name TEXT,
+    type INTEGER
+);

@@ -405,6 +405,43 @@ def Router(route):
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         data = response.json()
+        r1 =  data['plan']['itineraries'][0]
+        duration = r1['duration']
+        route.estimateTime = duration
+        stops = []
+        #iterate through the first itenarary - pull out the start/from from the route object
+        #then add in all stops, to route between
+        #type of stop, 0 is start, 1 is intermediate, 2 is end
+        for leg in r1['legs']:
+            stops.append({
+                'lat': leg['from']['lat'],
+                'lon': leg['from']['lon'],
+                'name': leg['from'].get('name', ''),
+                'type': 0
+            })
+
+            for stop in leg.get('intermediateStops', []):
+                stops.append({
+                    'lat': stop['lat'],
+                    'lon': stop['lon'],
+                    'name': stop.get('name', ''),
+                    'type': 1
+                })
+            stops.append({
+                'lat': leg['from']['lat'],
+                'lon': leg['from']['lon'],
+                'name': leg['from'].get('name', ''),
+                'type': 2
+            })
+        conn = get_db()
+        c = conn.cursor()
+        for stop in stops:
+            c.execute('''
+                INSERT INTO points (routeid, lat, lon, name, type)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (route.id, stop['lat'], stop['lon'], stop.get('name', ''), stop['type']))
+
+        conn.commit()
 
         with open('test_route_response.json', 'w') as f:
             json.dump(data, f, indent=2)

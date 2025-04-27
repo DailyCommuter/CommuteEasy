@@ -18,16 +18,19 @@
 
 <div id="map"></div>
 <script>
-	mapboxgl.accessToken = '{{ mapbox_token }}';
+	mapboxgl.accessToken = '{{ MAPBOX_TOKEN }}';
   
+	const stops = {{ stops|tojson }};
+	console.log('Center Lat:', stops[0].lat);
+	console.log('Center Lon:', stops[0].lon);
+
+
 	const map = new mapboxgl.Map({
 		container: 'map',
 		style: 'mapbox://styles/mapbox/streets-v11',
-		center: [{{ stops[0]['lon'] }}, {{ stops[0]['lat'] }}],
+		center: [stops[0].lon, stops[0].lat],
 		zoom: 12
 	});
-  
-	const stops = {{ stops|tojson }};
   
 	// Add markers for each stop
 	stops.forEach(stop => {

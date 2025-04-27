@@ -116,10 +116,12 @@ CREATE TABLE routes (
     FOREIGN KEY (userid) REFERENCES user(userid)
 );
 
-CREATE TABLE points(
-    FOREIGN KEY (routeid) REFERENCES routes(routeid) PRIMARY KEY,
+CREATE TABLE points (
+    pointid INTEGER PRIMARY KEY AUTOINCREMENT,
+    routeid INTEGER NOT NULL,
     lat REAL NOT NULL,
     lon REAL NOT NULL,
     name TEXT,
-    type INTEGER
+    type INTEGER,
+    FOREIGN KEY (routeid) REFERENCES routes(routeid) ON DELETE CASCADE
 );

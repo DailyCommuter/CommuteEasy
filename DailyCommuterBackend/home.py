@@ -41,7 +41,7 @@ def map_view(route_id):
         SELECT name, lat, lon
         FROM points
         WHERE route_id = ?
-        ORDER BY type ASC  -- if you have stop order!
+        ORDER BY type ASC
     '''
     c.execute(query, (route_id,))
     rows = c.fetchall()

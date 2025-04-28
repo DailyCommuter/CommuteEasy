@@ -413,16 +413,26 @@ def Router(route):
         #iterate through the first itenarary - pull out the start/from from the route object
         #then add in all stops, to route between
         #type of stop, 0 is start, 1 is intermediate, 2 is end
-        for leg in r1['legs']:
-            # Handle the start stop for each leg (from)
-            stops.append({
-                'lat': leg['from']['lat'],
-                'lon': leg['from']['lon'],
-                'name': leg['from'].get('name', 'Start'),
-                'type': 0  # Start point
-            })
+        # Handle the very first point (from[0])
+        first_leg = r1['legs'][0]
+        second_leg = r1['legs'][1]
 
-            # Handle the intermediate stops, if any
+        stops.append({
+            'lat': first_leg['from']['lat'],
+            'lon': first_leg['from']['lon'],
+            'name': first_leg['from'].get('name', 'Start'),
+            'type': 0  # Start
+        })
+        stops.append({
+            'lat': second_leg['from']['lat'],
+            'lon': second_leg['from']['lon'],
+            'name': second_leg['from'].get('name', 'Start'),
+            'type': 0  # Start
+        })
+
+        # Then, go through every leg
+        for leg in r1['legs']:
+            # Add intermediate stops if any
             for stop in leg.get('intermediateStops', []):
                 stops.append({
                     'lat': stop['lat'],
@@ -431,12 +441,12 @@ def Router(route):
                     'type': 1  # Intermediate stop
                 })
 
-            # Handle the destination stop (to)
+            # Add the destination stop ("to") of each leg
             stops.append({
                 'lat': leg['to']['lat'],
                 'lon': leg['to']['lon'],
                 'name': leg['to'].get('name', 'Destination'),
-                'type': 2  # Destination point
+                'type': 2  # Destination (end of that leg)
             })
         conn = get_db()
         c = conn.cursor()

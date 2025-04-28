@@ -38,7 +38,7 @@ def map_view(routeid):
     conn = get_db()
     c = conn.cursor()
     query = '''
-        SELECT name, lat, lon
+        SELECT name, lat, lon, type
         FROM points
         WHERE routeid = ?
         ORDER BY type ASC
@@ -49,8 +49,8 @@ def map_view(routeid):
 
     # Structure for the template
     stops = [
-        {'name': name, 'lat': lat, 'lon': lon}
-        for name, lat, lon in rows
+        {'name': name, 'lat': lat, 'lon': lon, 'type': type}
+        for name, lat, lon, type in rows
     ]
     return render_template('home/map.html', stops=stops, MAPBOX_TOKEN = MAPBOX_TOKEN)
 

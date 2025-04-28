@@ -421,7 +421,7 @@ def Router(route):
 def get_saved_routes(userid):
     try:
         with get_db() as db:
-            routes = db.execute('''
+            saved_routes = db.execute('''
                 SELECT start_address, end_address, arrival_time
                 FROM routes
                 WHERE userid = ?
@@ -432,10 +432,13 @@ def get_saved_routes(userid):
     except Exception as e:
         print(f"Error updating database: {e}")
     finally:
-        return routes
+        # TODO possibly modify the return value if FE wants a diff format
+        return saved_routes
 
 
-def get_saved_subway_stops():
+# Gets all the subway stops for NYC using the transitapp api and saves them in the db
+# Should be called at app startup and possibly some other times (maybe after loading a certain page?)
+def save_all_subway_stops():
     url = "https://external.transitapp.com/v3/public/stops_for_network"
     headers = {
         "apiKey": TRANSIT_TOKEN

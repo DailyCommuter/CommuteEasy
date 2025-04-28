@@ -103,6 +103,7 @@ CREATE TABLE subway_stop_times (
 
 CREATE TABLE routes (
 	routeid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    route_name TEXT NOT NULL,
 	start_address TEXT NOT NULL,
 	end_address TEXT NOT NULL,
 	arrival_time TEXT NOT NULL,

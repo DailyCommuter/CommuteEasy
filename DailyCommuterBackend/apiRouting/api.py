@@ -291,7 +291,8 @@ alert {
   }
 }
 '''
-def update_service_alerts(feed):
+def update_subway_alerts():
+    feed = fetch_data(endpoint = config.SUBWAY_ALERTS_URL_GTFS)
     db = get_db()
     i = 0
     while i < 5:
@@ -415,24 +416,49 @@ def Router(route):
         return jsonify({"error": str(e)}), 500
 
 
-# maybe get route name (if implemented)
 # @param userid: user id of requester
-# @return tuple: start_address, end_address, arrival_time
+# @return dictionary:
+'''
+{“School”:
+  {
+    “start_address” : start_address,
+    “end_address” : end_address,
+    “arrival_time” : arrival_time
+   },
+ “Work”:
+    {
+        “start_address” : start_address,
+        “end_address” : end_address,
+        “arrival_time” : arrival_time
+    },
+ ...}
+'''
 def get_saved_routes(userid):
     try:
         with get_db() as db:
-            saved_routes = db.execute('''
-                SELECT start_address, end_address, arrival_time
+            routes = db.execute('''
+                SELECT route_name, start_address, end_address, arrival_time
                 FROM routes
                 WHERE userid = ?
                 ''', 
                 (userid,)).fetchall()
+            for route in routes:
+                route_name = route["route_name"]
+                start_address = route["start_address"]
+                end_address = route["end_address"]
+                arrival_time = route["arrival_time"]
+
+                details = {"start_address" : f"{start_address}",
+                           "end_address" : f"{end_address}",
+                           "arrival_time" : f"{arrival_time}",}
+                
+                saved_routes = {f"{route_name}" : details}
+
     except sqlite3.IntegrityError as e:
         print(f"Integrity Error: {e}")
     except Exception as e:
         print(f"Error updating database: {e}")
     finally:
-        # TODO possibly modify the return value if FE wants a diff format
         return saved_routes
 
 
@@ -549,4 +575,3 @@ def address_autocomplete(input_text):
             # country = locations["features"][i]["properties"]["countrycode"]
             result.append(f"{address} {street} {zipcode} {city}")
         return locations
-    

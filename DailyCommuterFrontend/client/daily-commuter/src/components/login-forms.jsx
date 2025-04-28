@@ -10,9 +10,34 @@ import {
 } from "@chakra-ui/react";
 import google from "../assets/google.png";
 import { useState } from "react";
+import { handleLogin } from "./utils/firebase_requests";
+import { handleSignUp } from "./utils/firebase_requests";
 
 export default function LoginForms() {
   const [formType, setFormType] = useState("none");
+  const [formFields, setFormFields] = useState({
+    username: "",
+    password: "",
+    email: "",
+  });
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormFields((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+
+  function handeBackBtnClick() {
+    setFormType("none");
+    setFormFields({
+      // Clear all form fields
+      username: "",
+      password: "",
+      email: "",
+    });
+  }
 
   return (
     <Card.Body pb={0} w="100%" position="relative" minH="300px">
@@ -84,11 +109,14 @@ export default function LoginForms() {
                 Username <Field.RequiredIndicator />
               </Field.Label>
               <Input
+                name="username"
                 variant="outline"
                 bg="rgba(0, 0, 0, 0)"
                 borderRadius="8px"
                 borderColor="#D1FFCC"
                 borderWidth=".5px"
+                value={formFields.username}
+                onChange={handleChange}
               />
             </Field.Root>
             <Field.Root required>
@@ -96,8 +124,11 @@ export default function LoginForms() {
                 Password <Field.RequiredIndicator />
               </Field.Label>
               <Input
-                variant="outline"
+                name="password"
                 type="password"
+                variant="outline"
+                value={formFields.password}
+                onChange={handleChange}
                 bg="rgba(0, 0, 0, 0)"
                 borderRadius="8px"
                 borderColor="#D1FFCC"
@@ -109,12 +140,15 @@ export default function LoginForms() {
                 Email <Field.RequiredIndicator />
               </Field.Label>
               <Input
+                name="email"
                 variant="outline"
                 type="email"
                 bg="rgba(0, 0, 0, 0)"
                 borderRadius="8px"
                 borderColor="#D1FFCC"
                 borderWidth=".5px"
+                value={formFields.email}
+                onChange={handleChange}
               />
             </Field.Root>
             <HStack justify={"center"}>
@@ -123,7 +157,7 @@ export default function LoginForms() {
                 borderColor="#6DCD65"
                 borderWidth=".5px"
                 mt={2}
-                onClick={() => setFormType("none")}
+                onClick={() => handleSignUp(formFields)}
                 w={100}
                 _hover={{ bg: "#6DCD65", color: "black" }}
               >
@@ -136,7 +170,7 @@ export default function LoginForms() {
                 borderWidth=".5px"
                 mt={2}
                 w={100}
-                onClick={() => setFormType("none")}
+                onClick={handeBackBtnClick}
               >
                 Back
               </Button>
@@ -163,11 +197,14 @@ export default function LoginForms() {
                 Username <Field.RequiredIndicator />
               </Field.Label>
               <Input
+                name="username"
                 variant="outline"
                 bg="rgba(0, 0, 0, 0)"
                 borderRadius="8px"
                 borderColor="#D1FFCC"
                 borderWidth=".5px"
+                value={formFields.username}
+                onChange={handleChange}
               />
             </Field.Root>
             <Field.Root required>
@@ -175,12 +212,15 @@ export default function LoginForms() {
                 Password <Field.RequiredIndicator />
               </Field.Label>
               <Input
+                name="password"
                 variant="outline"
                 type="password"
                 bg="rgba(0, 0, 0, 0)"
                 borderRadius="8px"
                 borderColor="#D1FFCC"
                 borderWidth=".5px"
+                value={formFields.password}
+                onChange={handleChange}
               />
             </Field.Root>
 
@@ -190,7 +230,7 @@ export default function LoginForms() {
                 borderColor="#6DCD65"
                 borderWidth=".5px"
                 mt={2}
-                onClick={() => setFormType("none")}
+                onClick={() => handleLogin(formFields)}
                 w={100}
                 _hover={{ bg: "#6DCD65", color: "black" }}
               >
@@ -203,7 +243,7 @@ export default function LoginForms() {
                 borderWidth=".5px"
                 mt={2}
                 w={100}
-                onClick={() => setFormType("none")}
+                onClick={handeBackBtnClick}
               >
                 Back
               </Button>

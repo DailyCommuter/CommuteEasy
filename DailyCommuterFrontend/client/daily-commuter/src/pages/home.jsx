@@ -4,7 +4,7 @@ import { FaTrain } from "react-icons/fa6";
 import NewCommuteForm from "../components/new-commute-form";
 import background from "../assets/background.png";
 import MyCommutesForm from "../components/my-commutes-form";
-export default function MainPage() {
+export default function HomePage() {
   return (
     <Box
       bgImage={`url(${background})`}
@@ -25,7 +25,7 @@ export default function MainPage() {
             borderRadius="33.5px"
           >
             <Card.Body gap="2">
-              <Tabs.Root variant={"line"} w="900px">
+              <Tabs.Root variant={"line"} w="900px" defaultValue="new commute">
                 <Tabs.List>
                   <Tabs.Trigger
                     value="new commute"

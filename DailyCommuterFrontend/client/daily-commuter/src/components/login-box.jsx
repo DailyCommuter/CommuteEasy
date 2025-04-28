@@ -1,12 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import { Card, Center, Text, Image, HStack, Button } from "@chakra-ui/react";
 import logoGreen from "../assets/logo-green.png";
 import LoginForms from "./login-forms";
 
-
 export default function LoginBox({ setLoginMenu }) {
-  const navigate = useNavigate();
-
   return (
     <Card.Root
       color={"white"}

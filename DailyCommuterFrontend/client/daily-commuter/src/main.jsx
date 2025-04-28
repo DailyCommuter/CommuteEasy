@@ -7,8 +7,8 @@ import { system } from "@chakra-ui/react/preset";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    {/* pass system value here */}
     <ChakraProvider value={system}>
+      {/* Firebase Auth Provider here wrapping arround <App/> */}
       <App />
     </ChakraProvider>
   </StrictMode>

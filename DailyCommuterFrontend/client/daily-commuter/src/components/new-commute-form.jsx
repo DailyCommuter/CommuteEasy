@@ -10,11 +10,41 @@ import {
   Button,
   Flex,
 } from "@chakra-ui/react";
+import { useState } from "react";
+import { addCommuteToDB } from "./utils/db-calls";
 
 export default function NewCommuteForm() {
+  const [formFields, setFormFields] = useState({
+    commuteName: "",
+    startingLocation: "",
+    arrivalTime: "",
+    destination: "",
+    daysNeeded: [],
+  });
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormFields((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+
+  function handleDayToggle(day) {
+    setFormFields((prev) => {
+      const isSelected = prev.daysNeeded.includes(day);
+      return {
+        ...prev,
+        daysNeeded: isSelected
+          ? prev.daysNeeded.filter((d) => d !== day) // if already selected, remove it
+          : [...prev.daysNeeded, day], // otherwise, add it
+      };
+    });
+  }
+
   return (
     <Box>
-      <HStack gap="10" width="full">
+      <HStack gap="10" width="full" mt={5}>
         <Field.Root required>
           <Field.Label color={"gray"}>
             Commute Name <Field.RequiredIndicator />
@@ -23,7 +53,11 @@ export default function NewCommuteForm() {
             placeholder="Work"
             variant="subtle"
             color={"white"}
-            backgroundColor={"black"}
+            backgroundColor={"#181818"}
+            name="commuteName"
+            value={formFields.commuteName}
+            onChange={handleChange}
+            fontSize={"lg"}
           />
         </Field.Root>
         <Field.Root required>
@@ -34,11 +68,15 @@ export default function NewCommuteForm() {
             placeholder="9AM"
             variant="subtle"
             color={"white"}
-            backgroundColor={"black"}
+            backgroundColor={"#181818"}
+            name="arrivalTime"
+            value={formFields.arrivalTime}
+            onChange={handleChange}
+            fontSize={"lg"}
           />
         </Field.Root>
       </HStack>
-      <HStack gap="10" width="full">
+      <HStack gap="10" width="full" mt={5}>
         <Field.Root required>
           <Field.Label color={"gray"}>
             Starting Location <Field.RequiredIndicator />
@@ -47,7 +85,11 @@ export default function NewCommuteForm() {
             placeholder="370 Jay Street"
             variant="subtle"
             color={"white"}
-            backgroundColor={"black"}
+            backgroundColor={"#181818"}
+            name="startingLocation"
+            value={formFields.startingLocation}
+            onChange={handleChange}
+            fontSize={"lg"}
           />
         </Field.Root>
         <Field.Root required>
@@ -58,31 +100,40 @@ export default function NewCommuteForm() {
             placeholder=" 20 W 34th St., New York, 10001"
             variant="subtle"
             color={"white"}
-            backgroundColor={"black"}
+            backgroundColor={"#181818"}
+            name="destination"
+            value={formFields.destination}
+            onChange={handleChange}
+            fontSize={"lg"}
           />
         </Field.Root>
       </HStack>
-      <Text color={"gray"} mt={5}>
-        Days Needed
-      </Text>
-      <HStack align="flex-start" gap={0} mt={5}>
+      <Field.Root required mt={5}>
+        <Field.Label color={"gray"}>
+          Days Needed <Field.RequiredIndicator />
+        </Field.Label>
+      </Field.Root>
+      <HStack mt={5} gap={7}>
         <For each={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}>
           {(day) => (
-            <Stack key={day} align="flex-start" flex="1">
-              <Checkbox.Root variant={"subtle"}>
+            <Stack key={day}>
+              <Checkbox.Root
+                variant={"solid"}
+                checked={formFields.daysNeeded.includes(day)}
+                onCheckedChange={() => handleDayToggle(day)}
+              >
                 <Checkbox.HiddenInput />
                 <HStack>
-                  <Text color={"gray"}>{day}</Text>
-                  <Checkbox.Control backgroundColor={"black"} color={"white"} />
-                  <Checkbox.Label>Checkbox</Checkbox.Label>
+                  <Checkbox.Control />
+                  <Checkbox.Label color={"gray"}>{day}</Checkbox.Label>
                 </HStack>
               </Checkbox.Root>
             </Stack>
           )}
         </For>
-      </HStack>
-      <Flex justifyContent="flex-end" mt={7}>
+
         <Button
+          ml="auto"
           borderRadius="33.5px"
           backgroundColor={"#6DCD65"}
           _hover={{
@@ -90,10 +141,11 @@ export default function NewCommuteForm() {
             transform: "scale(1.01)",
             transition: "all 0.3s ease-in-out",
           }}
+          onClick={() => addCommuteToDB(formFields)}
         >
           Add
         </Button>
-      </Flex>
+      </HStack>
     </Box>
   );
 }

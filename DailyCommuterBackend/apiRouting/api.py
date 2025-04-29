@@ -414,39 +414,32 @@ def Router(route):
         #then add in all stops, to route between
         #type of stop, 0 is start, 1 is intermediate, 2 is end
         # Handle the very first point (from[0])
+        # Handle the first "from" only once at the very beginning
         first_leg = r1['legs'][0]
-        second_leg = r1['legs'][1]
-
         stops.append({
             'lat': first_leg['from']['lat'],
             'lon': first_leg['from']['lon'],
             'name': first_leg['from'].get('name', 'Start'),
             'type': 0  # Start
         })
-        stops.append({
-            'lat': second_leg['from']['lat'],
-            'lon': second_leg['from']['lon'],
-            'name': second_leg['from'].get('name', 'Start'),
-            'type': 0  # Start
-        })
 
-        # Then, go through every leg
-        for leg in r1['legs']:
-            # Add intermediate stops if any
+        # Now go through each leg
+        for i, leg in enumerate(r1['legs']):
+            # Add any intermediate stops
             for stop in leg.get('intermediateStops', []):
                 stops.append({
                     'lat': stop['lat'],
                     'lon': stop['lon'],
-                    'name': stop.get('name', 'Intermediate Stop'),
-                    'type': 1  # Intermediate stop
+                    'name': stop.get('name', f'Intermediate {i}'),
+                    'type': 1  # Intermediate
                 })
 
-            # Add the destination stop ("to") of each leg
+            # Add the leg's "to" location
             stops.append({
                 'lat': leg['to']['lat'],
                 'lon': leg['to']['lon'],
-                'name': leg['to'].get('name', 'Destination'),
-                'type': 2  # Destination (end of that leg)
+                'name': leg['to'].get('name', f'Stop {i}'),
+                'type': 2 if i == len(r1['legs']) - 1 else 1  # Mark as end if it's the last leg
             })
         conn = get_db()
         c = conn.cursor()

@@ -18,19 +18,19 @@ export default function HomePage() {
     >
       <Center minH="100vh">
         <Stack gap="4" direction="row" wrap="wrap">
-          <Card.Root
-            variant={"outline"}
-            bg={"#161616"}
-            borderColor={"gray"}
-            borderRadius="33.5px"
-          >
+          <Card.Root bg={"#161616"} borderColor={"gray"} borderRadius="33.5px">
             <Card.Body gap="2">
-              <Tabs.Root variant={"line"} w="900px" defaultValue="new commute">
+              <Tabs.Root
+                variant="line"
+                w="900px"
+                defaultValue="new commute"
+                fitted
+              >
                 <Tabs.List>
                   <Tabs.Trigger
                     value="new commute"
                     _selected={{
-                      color: "white", // or any color you want when focused/active
+                      color: "white",
                     }}
                   >
                     <FaTrain />
@@ -39,7 +39,7 @@ export default function HomePage() {
                   <Tabs.Trigger
                     value="my commutes"
                     _selected={{
-                      color: "white", // or any color you want when focused/active
+                      color: "white",
                     }}
                   >
                     <LuFolder />

@@ -1,19 +1,21 @@
 // Import the functions you need from the SDKs you need
+import "dotenv/config";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
+// Your web app's Firebase configurationxq
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAdWGEOthTkA9nUnvD1OkN-7wIhNmmjFos",
-  authDomain: "dailycommuter-c5de3.firebaseapp.com",
-  projectId: "dailycommuter-c5de3",
-  storageBucket: "dailycommuter-c5de3.firebasestorage.app",
-  messagingSenderId: "993390757681",
-  appId: "1:993390757681:web:392d2981b47862866d1210",
-  measurementId: "G-4EC63CEE21"
+  apiKey: process.env.REACT_APP_FB_API_KEY,
+  authDomain: process.env.REACT_APP_FB_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FB_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FB_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FB_MSG_SENDER_ID,
+  appId: process.env.REACT_APP_FB_APP_ID,
+  measurementId: process.env.REACT_APP_FB_MEASUREMENT_ID,
 };
 
 // Initialize Firebase

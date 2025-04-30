@@ -187,21 +187,42 @@ def update_trains(feed):
         pass
 
 
-# Bus update GTFS structure is as follows:
-def update_busses(feed):
-    pass
+### ALERTING LOGIC ###
+# at certain time/interval, get all alerts
+# check if any of the alerts are related to any of the stops on a given route
+# recalculate the route
+#   if route ends up being longer (by certain time amount?) then push notif
+#   else, dont do anything
 
-
-# Elevator and escalator alert GTFS structure is as follows:
-def update_elev_escal_alerts(feed):
-    pass
-
-
-# TODO double check that the individual service alert feeds 
-#   are the same structure as the "All Service Alerts" feed
+# Delete all of the previous updates
+# Alerts give info that affect either a specific stop or an entire route
+# Get current updates and store the stop_id or route_id as well as the actual alert
 # Service alert GTFS structure is as follows:
 '''
-Example:
+id: "A28S#EL226"
+alert {
+  active_period {
+    start: 1747360800
+    end: 1759204800
+  }
+  informed_entity {
+    stop_id: "A28S"
+  }
+  header_text {
+    translation {
+      text: "Elevator outage @ 34 St-Penn Station: uptown C/E platform to lower mezzanine for access to Penn Station concourse and rest of complex [Capital Replacement]"
+      language: "en"
+    }
+  }
+  description_text {
+    translation {
+      text: "Elevator outage @ 34 St-Penn Station: uptown C/E platform to lower mezzanine for access to Penn Station concourse and rest of complex [Capital Replacement]"
+      language: "en"
+    }
+  }
+}
+
+Or sometimes can be convoluted to be:
 ----------------------------------
 id: "lmm:planned_work:19829"
 alert {
@@ -291,46 +312,43 @@ alert {
   }
 }
 '''
-def update_service_alerts(feed):
+def update_subway_alerts():
+    feed = fetch_data(endpoint = config.SUBWAY_ALERTS_URL_GTFS)
     db = get_db()
-    i = 0
-    while i < 5:
+    try:
+        db.execute('DELETE FROM my_data;')
         for entity in feed.entity:
-            # Get and store the update_id
             db.execute(
                 'INSERT INTO subway_alerts (alert_id)'
                 'VALUES (?)',
                 (entity.id,)
             )
-            db.commit()
-            # Get and store the actual alert
-            if entity.HasField('alert'):
-                # print(entity.alert.header_text.translation[0].text)
-                # print('----------------------------------')
-                db.execute(
-                    'INSERT INTO subway_alerts (agency_id, route_id, alert_text)'
-                    'VALUES (?, ?, ?)',
-                    (entity.alert.informed_entity[0].agency_id, 
-                    entity.alert.informed_entity[0].route_id,
-                    entity.alert.header_text.translation[0].text,)
-                )
-                db.commit()
-            # TODO add the description_text from the end of the entity. 
-            #   not sure how to do that
-            i += 1
+            inf_ent = entity.alert.informed_entity
+            for ie in inf_ent:
+                if ie.HasField('stop_id'):
+                    db.execute(
+                        'INSERT INTO subway_alerts (stop_id, alert_text)'
+                        'VALUES (?, ?)',
+                        (ie.stop_id, entity.alert.header_text.translation[0].text,)
+                    )
+                elif ie.HasField('route_id'):
+                    db.execute(
+                        'INSERT INTO subway_alerts (route_id, alert_text)'
+                        'VALUES (?, ?)',
+                        (ie.route_id, entity.alert.header_text.translation[0].text,)
+                    )
+        db.commit()
+
+    except sqlite3.IntegrityError as e:
+        print(f"Integrity Error: {e}")
+    except Exception as e:
+        print(f"Error updating database: {e}")
 
 
-def update_all_feeds():
+def update_subway_feeds():
     # Update all the trains
     for url in train_update_urls:
         update_trains(fetch_data(url))
-    
-    # TODO Complete update_busses() to get bus data
-    
-    # TODO Complete/confirm the update_service_alerts() function
-    # Update all the alerts
-    # for url in service_alert_urls:
-    #     update_service_alerts(fetch_data(url))
 
 
 def geocoder(address):
@@ -459,27 +477,55 @@ def Router(route):
         return jsonify({"error": str(e)}), 500
 
 
-# maybe get route name (if implemented)
 # @param userid: user id of requester
-# @return tuple: start_address, end_address, arrival_time
+# @return dictionary: {route_name : {start_address, end_address, arrival_time}, {...}}
+'''
+{“School”:
+  {
+    “start_address” : start_address,
+    “end_address” : end_address,
+    “arrival_time” : arrival_time
+   },
+ “Work”:
+    {
+        “start_address” : start_address,
+        “end_address” : end_address,
+        “arrival_time” : arrival_time
+    },
+ ...}
+'''
 def get_saved_routes(userid):
     try:
         with get_db() as db:
             routes = db.execute('''
-                SELECT start_address, end_address, arrival_time
+                SELECT route_name, start_address, end_address, arrival_time
                 FROM routes
                 WHERE userid = ?
                 ''', 
                 (userid,)).fetchall()
+            for route in routes:
+                route_name = route["route_name"]
+                start_address = route["start_address"]
+                end_address = route["end_address"]
+                arrival_time = route["arrival_time"]
+
+                details = {"start_address" : f"{start_address}",
+                           "end_address" : f"{end_address}",
+                           "arrival_time" : f"{arrival_time}",}
+                
+                saved_routes = {f"{route_name}" : details}
+
     except sqlite3.IntegrityError as e:
         print(f"Integrity Error: {e}")
     except Exception as e:
         print(f"Error updating database: {e}")
     finally:
-        return routes
+        return saved_routes
 
 
-def get_saved_subway_stops():
+# Gets all the subway stops for NYC using the transitapp api and saves them in the db
+# Should be called at app startup and possibly some other times (maybe after loading a certain page?)
+def save_all_subway_stops():
     url = "https://external.transitapp.com/v3/public/stops_for_network"
     headers = {
         "apiKey": TRANSIT_TOKEN
@@ -590,4 +636,3 @@ def address_autocomplete(input_text):
             # country = locations["features"][i]["properties"]["countrycode"]
             result.append(f"{address} {street} {zipcode} {city}")
         return locations
-    

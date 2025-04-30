@@ -1,0 +1,114 @@
+id: "lmm:alert:427939"
+alert {
+  active_period {
+    start: 1745885629
+  }
+  informed_entity {
+    agency_id: "MTASBWY"
+    route_id: "3"
+  }
+  informed_entity {
+    agency_id: "MTASBWY"
+    stop_id: "249"
+  }
+  header_text {
+    translation {
+      text: "[3] trains are not stopping at Kingston Av in both directions at the request of the NYPD because of a protest street level."
+      language: "en"
+    }
+    translation {
+      text: "<p>[3] trains are not stopping at <b>Kingston Av</b> in both directions at the request of the NYPD because of a protest street level. </p>"
+      language: "en-html"
+    }
+  }
+  description_text {
+    translation {
+      text: "For alternate service, consider B45 buses."
+      language: "en"
+    }
+    translation {
+      text: "<p>For alternate service, consider <strong>B45 </strong>buses. </p>"
+      language: "en-html"
+    }
+  }
+}
+--------------------------------
+id: "lmm:alert:427950"
+alert {
+  active_period {
+    start: 1745885200
+  }
+  informed_entity {
+    agency_id: "MTASBWY"
+    route_id: "3"
+  }
+  informed_entity {
+    agency_id: "MTASBWY"
+    stop_id: "248"
+  }
+  header_text {
+    translation {
+      text: "Southbound [3] trains are not stopping at Nostrand Av at the request of the NYPD because of a protest on street level."
+      language: "en"
+    }
+    translation {
+      text: "<p>Southbound [3] trains are not stopping at <b>Nostrand Av</b> at the request of the NYPD because of a protest on street level.</p>"
+      language: "en-html"
+    }
+  }
+  description_text {
+    translation {
+      text: "For service to/from bypassed stations, take a northbound train."
+      language: "en"
+    }
+    translation {
+      text: "<p>For service to/from bypassed stations, take a northbound train. </p>"
+      language: "en-html"
+    }
+  }
+}
+--------------------------------
+id: "lmm:planned_work:24131"
+alert {
+  active_period {
+    start: 1748051100
+    end: 1748336400
+  }
+  informed_entity {
+    agency_id: "MTASBWY"
+    route_id: "F"
+  }
+  informed_entity {
+    agency_id: "MTASBWY"
+    stop_id: "D15"
+  }
+  informed_entity {
+    agency_id: "MTASBWY"
+    stop_id: "D16"
+  }
+  informed_entity {
+    agency_id: "MTASBWY"
+    stop_id: "D17"
+  }
+  header_text {
+    translation {
+      text: "In Manhattan, all uptown [F] board from the express track at W 4 St, 34 St-Herald Sq, 42 St-Bryant Pk and 47-50 Sts-Rockefeller Ctr"
+      language: "en"
+    }
+    translation {
+      text: "<p>In Manhattan, all uptown [F] board from the express track at <strong>W 4 St</strong>, <b>34 St-Herald Sq</b>, <b>42 St-Bryant Pk</b> and <b>47-50 Sts-Rockefeller Ctr</b></p>"
+      language: "en-html"
+    }
+  }
+  description_text {
+    translation {
+      text: "Please listen carefully to announcements and check the destination displayed on the train before boarding.\n\nWhat\'s happening?\nWe\'re replacing tracks"
+      language: "en"
+    }
+    translation {
+      text: "<p>Please listen carefully to announcements and check the destination displayed on the train before boarding.</p><p></p><p><strong>What\'s happening?</strong></p><p>We\'re replacing tracks</p>"
+      language: "en-html"
+    }
+  }
+}
+--------------------------------

@@ -20,9 +20,10 @@ CREATE TABLE user (
 CREATE TABLE subway_alerts (
     alert_id TEXT,
     agency_id TEXT,
-    route_id INTEGER,
+    route_id TEXT,
+    stop_id TEXT,
     alert_text TEXT,
-    description_text TEXT
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 

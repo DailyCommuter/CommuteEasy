@@ -187,16 +187,6 @@ def update_trains(feed):
         pass
 
 
-# Bus update GTFS structure is as follows:
-def update_busses(feed):
-    pass
-
-
-# Elevator and escalator alert GTFS structure is as follows:
-def update_elev_escal_alerts(feed):
-    pass
-
-
 # TODO double check that the individual service alert feeds 
 #   are the same structure as the "All Service Alerts" feed
 # Service alert GTFS structure is as follows:
@@ -294,40 +284,41 @@ alert {
 def update_subway_alerts():
     feed = fetch_data(endpoint = config.SUBWAY_ALERTS_URL_GTFS)
     db = get_db()
-    i = 0
-    while i < 5:
+    try:
+        db.execute('DELETE FROM my_data;')
         for entity in feed.entity:
-            # Get and store the update_id
             db.execute(
                 'INSERT INTO subway_alerts (alert_id)'
                 'VALUES (?)',
                 (entity.id,)
             )
-            db.commit()
-            # Get and store the actual alert
-            if entity.HasField('alert'):
-                # print(entity.alert.header_text.translation[0].text)
-                # print('----------------------------------')
-                db.execute(
-                    'INSERT INTO subway_alerts (agency_id, route_id, alert_text)'
-                    'VALUES (?, ?, ?)',
-                    (entity.alert.informed_entity[0].agency_id, 
-                    entity.alert.informed_entity[0].route_id,
-                    entity.alert.header_text.translation[0].text,)
-                )
-                db.commit()
-            # TODO add the description_text from the end of the entity. 
-            #   not sure how to do that
-            i += 1
+            inf_ent = entity.alert.informed_entity
+            for ie in inf_ent:
+                if ie.HasField('stop_id'):
+                    db.execute(
+                        'INSERT INTO subway_alerts (stop_id, alert_text)'
+                        'VALUES (?, ?)',
+                        (ie.stop_id, entity.alert.header_text.translation[0].text,)
+                    )
+                elif ie.HasField('route_id'):
+                    db.execute(
+                        'INSERT INTO subway_alerts (route_id, alert_text)'
+                        'VALUES (?, ?)',
+                        (ie.route_id, entity.alert.header_text.translation[0].text,)
+                    )
+        db.commit()
+
+    except sqlite3.IntegrityError as e:
+        print(f"Integrity Error: {e}")
+    except Exception as e:
+        print(f"Error updating database: {e}")
 
 
 def update_all_feeds():
     # Update all the trains
     for url in train_update_urls:
         update_trains(fetch_data(url))
-    
-    # TODO Complete update_busses() to get bus data
-    
+        
     # TODO Complete/confirm the update_service_alerts() function
     # Update all the alerts
     # for url in service_alert_urls:
@@ -417,7 +408,7 @@ def Router(route):
 
 
 # @param userid: user id of requester
-# @return dictionary:
+# @return dictionary: {route_name : {start_address, end_address, arrival_time}, {...}}
 '''
 {“School”:
   {
@@ -575,3 +566,11 @@ def address_autocomplete(input_text):
             # country = locations["features"][i]["properties"]["countrycode"]
             result.append(f"{address} {street} {zipcode} {city}")
         return locations
+
+
+
+# at certain time/interval, get all alerts
+# check if any of the alerts are related to any of the stops on a given route
+# recalculate the route
+#   if route ends up being longer (by certain time amount?) the push notif
+#   else, dont do anything

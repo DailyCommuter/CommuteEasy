@@ -187,11 +187,42 @@ def update_trains(feed):
         pass
 
 
-# TODO double check that the individual service alert feeds 
-#   are the same structure as the "All Service Alerts" feed
+### ALERTING LOGIC ###
+# at certain time/interval, get all alerts
+# check if any of the alerts are related to any of the stops on a given route
+# recalculate the route
+#   if route ends up being longer (by certain time amount?) then push notif
+#   else, dont do anything
+
+# Delete all of the previous updates
+# Alerts give info that affect either a specific stop or an entire route
+# Get current updates and store the stop_id or route_id as well as the actual alert
 # Service alert GTFS structure is as follows:
 '''
-Example:
+id: "A28S#EL226"
+alert {
+  active_period {
+    start: 1747360800
+    end: 1759204800
+  }
+  informed_entity {
+    stop_id: "A28S"
+  }
+  header_text {
+    translation {
+      text: "Elevator outage @ 34 St-Penn Station: uptown C/E platform to lower mezzanine for access to Penn Station concourse and rest of complex [Capital Replacement]"
+      language: "en"
+    }
+  }
+  description_text {
+    translation {
+      text: "Elevator outage @ 34 St-Penn Station: uptown C/E platform to lower mezzanine for access to Penn Station concourse and rest of complex [Capital Replacement]"
+      language: "en"
+    }
+  }
+}
+
+Or sometimes can be convoluted to be:
 ----------------------------------
 id: "lmm:planned_work:19829"
 alert {
@@ -314,15 +345,10 @@ def update_subway_alerts():
         print(f"Error updating database: {e}")
 
 
-def update_all_feeds():
+def update_subway_feeds():
     # Update all the trains
     for url in train_update_urls:
         update_trains(fetch_data(url))
-        
-    # TODO Complete/confirm the update_service_alerts() function
-    # Update all the alerts
-    # for url in service_alert_urls:
-    #     update_service_alerts(fetch_data(url))
 
 
 def geocoder(address):
@@ -610,11 +636,3 @@ def address_autocomplete(input_text):
             # country = locations["features"][i]["properties"]["countrycode"]
             result.append(f"{address} {street} {zipcode} {city}")
         return locations
-
-
-
-# at certain time/interval, get all alerts
-# check if any of the alerts are related to any of the stops on a given route
-# recalculate the route
-#   if route ends up being longer (by certain time amount?) the push notif
-#   else, dont do anything

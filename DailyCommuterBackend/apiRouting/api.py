@@ -1,7 +1,7 @@
 import config
 import os
 import time
-import datetime
+from datetime import datetime
 import json
 import requests
 import sqlite3
@@ -362,10 +362,11 @@ def createRoute(start_address, end_address, arriveby, userid):
     c = conn.cursor()
     c.execute('''
                 INSERT INTO routes (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arrival_time, userid)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arriveby, userid))
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arriveby, userid)) 
     route_id = c.lastrowid
     conn.commit()
+    
     return getRoute(route_id)
 
 
@@ -397,7 +398,7 @@ def Router(route):
         'toPlace': f"{route.end_lat},{route.end_lon}",
         'arriveBy': 'true',
         'time': route.arrival_time,
-        'date': datetime.today()
+        'date': datetime.today().strftime("%Y-%m-%d")
     }
 
 
@@ -405,6 +406,49 @@ def Router(route):
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
         data = response.json()
+        r1 =  data['plan']['itineraries'][0]
+        duration = r1['duration']
+        route.estimateTime = duration
+        stops = []
+        #iterate through the first itenarary - pull out the start/from from the route object
+        #then add in all stops, to route between
+        #type of stop, 0 is start, 1 is intermediate, 2 is end
+        # Handle the very first point (from[0])
+        # Handle the first "from" only once at the very beginning
+        first_leg = r1['legs'][0]
+        stops.append({
+            'lat': first_leg['from']['lat'],
+            'lon': first_leg['from']['lon'],
+            'name': first_leg['from'].get('name', 'Start'),
+            'type': 0  # Start
+        })
+
+        # Now go through each leg
+        for i, leg in enumerate(r1['legs']):
+            # Add any intermediate stops
+            for stop in leg.get('intermediateStops', []):
+                stops.append({
+                    'lat': stop['lat'],
+                    'lon': stop['lon'],
+                    'name': stop.get('name', f'Intermediate {i}'),
+                    'type': 1  # Intermediate
+                })
+
+            # Add the leg's "to" location
+            stops.append({
+                'lat': leg['to']['lat'],
+                'lon': leg['to']['lon'],
+                'name': leg['to'].get('name', f'Stop {i}'),
+                'type': 2 if i == len(r1['legs']) - 1 else 1  # Mark as end if it's the last leg
+            })
+        conn = get_db()
+        c = conn.cursor()
+        for stop in stops:
+            c.execute('''
+                INSERT INTO points (routeid, lat, lon, name, type)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (route.id, stop['lat'], stop['lon'], stop.get('name', ''), stop['type']))
+        conn.commit()
 
         with open('test_route_response.json', 'w') as f:
             json.dump(data, f, indent=2)

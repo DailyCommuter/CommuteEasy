@@ -33,9 +33,26 @@ def index():
     return render_template('home/index.html', trip_update = trip_update)
 
 
-@bp.route('/map/')
-def map_view():
-    return render_template('home/map.html', MAPBOX_TOKEN = MAPBOX_TOKEN)
+@bp.route('/displayroute/<routeid>')
+def map_view(routeid):
+    conn = get_db()
+    c = conn.cursor()
+    query = '''
+        SELECT name, lat, lon, type
+        FROM points
+        WHERE routeid = ?
+        ORDER BY type ASC
+    '''
+    c.execute(query, (routeid,))
+    rows = c.fetchall()
+    conn.close()
+
+    # Structure for the template
+    stops = [
+        {'name': name, 'lat': lat, 'lon': lon, 'type': type}
+        for name, lat, lon, type in rows
+    ]
+    return render_template('home/map.html', stops=stops, MAPBOX_TOKEN = MAPBOX_TOKEN)
 
 
 @bp.route('/addRoute', methods=['GET', 'POST'])
@@ -48,8 +65,8 @@ def createRouteForm():
 
         try:
             newroute = createRoute(start_address, end_address, arriveby, userid)
-            print(Router(newroute))
-            return redirect('/') #should go to saved routes page
+            Router(newroute)
+            return redirect(url_for('home.map_view', routeid=newroute.id)) #should go to saved routes page
         except Exception as e:
             return f"Error: {e}", 500
     return render_template('addroute.html')

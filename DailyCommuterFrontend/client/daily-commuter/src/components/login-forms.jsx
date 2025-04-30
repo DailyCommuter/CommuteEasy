@@ -10,8 +10,8 @@ import {
 } from "@chakra-ui/react";
 import google from "../assets/google.png";
 import { useState } from "react";
-import { handleLogin } from "./utils/firebase_requests";
-import { handleSignUp } from "./utils/firebase_requests";
+import { handleLogin } from "./utils/firebase-requests";
+import { handleSignUp } from "./utils/firebase-requests";
 
 export default function LoginForms() {
   const [formType, setFormType] = useState("none");

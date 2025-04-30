@@ -1,126 +1,112 @@
+
+
 <!DOCTYPE html>
+
 <html>
+
 <head>
-	<title> My maps </title>
-	<script src='https://api.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js'></script>
-	<link href='https://api.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.css' rel='stylesheet' />
-	<style>
-		.container {
-			max-width: 70%;
-			max-height: 50%;
-			margin-left: auto;
-			margin-right: auto;
-		}
-		.inputBox {
-		    width: 50%;
-		    padding: 12px 20px;
-		    margin: 8px 0;
-		    box-sizing: border-box;
-		}
-		.button {
-		    background-color: #4CAF50;
-		    border: none;
-		    color: white;
-		    padding: 15px 32px;
-		    text-align: center;
-		    text-decoration: none;
-		    display: inline-block;
-		    font-size: 16px;
-		    margin: 4px 2px;
-		    cursor: pointer;
-		}
-	</style>
+
+    <meta charset="utf-8" />
+
+    <title>Mapbox Stops Map</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!-- Mapbox GL JS -->
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js'></script>
+
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css' rel='stylesheet' />
+
+
+    <style>
+
+      body { margin:0; padding:0; }
+
+      #map { position:absolute; top:0; bottom:0; width:100%; }
+
+    </style>
+
 </head>
 
 <body>
-	<div class="container">
-		
-		<font face="verdana" size='7'> Mapbox maps in your apps</font> <br/><br/>
-		<input class="inputBox" type="number" id="Longitude" placeholder="Enter Longitude" />
-		<input class="inputBox" type="number" id="Latitude" placeholder="Enter Latitude" />
-		<button class="button" onclick="getLonLat()"> Submit</button>
-		<div id='map' style='width: 95%; height:500px;'></div><br/><br/>
-		
-	</div>
+
+
+<div id="map"></div>
+
+<script>
+
+	mapboxgl.accessToken = '{{ MAPBOX_TOKEN }}';
 	
-
-
-
-	<script>
-		var longitude, latitude;
-		function getLonLat(){
-			longitude = document.getElementById("Longitude").value;
-			latitude = document.getElementById("Latitude").value;
-			display_map(longitude, latitude);
-		}
-		function display_map(longitude=40.7128, latitude=73.0060) {
-			mapboxgl.accessToken = "{{ MAPBOX_TOKEN }}"
-			var map = new mapboxgl.Map({
-			container: 'map',
-			style: 'mapbox://styles/mapbox/satellite-streets-v10',
-			center: [longitude,latitude],
-			zoom: 16,
-			bearing: -17.6,
-			pitch:45
-		
-			});
-			// fulscreen button 
-			map.addControl(new mapboxgl.FullscreenControl());
-			// display a blue marker
-			var marker = new mapboxgl.Marker()
-	  			.setLngLat([longitude,latitude])
-	  			.addTo(map);
-	  		// Navigation marker at top-left corner
-	  		var nav = new mapboxgl.NavigationControl();
-	  			map.addControl(nav, 'top-left');
-	  		// change false to true, to get your location. Then, enable location in the browser.
-	  		map.addControl(new mapboxgl.GeolocateControl({
-	    			positionOptions: {
-	        			enableHighAccuracy: false
-	    			},
-	    		trackUserLocation: false
-			}));
-	  		// The 'building' layer in the mapbox-streets vector source contains building-height
-			// data from OpenStreetMap.
-			map.on('load', function() {
-			    // Insert the layer beneath any symbol layer.
-			    var layers = map.getStyle().layers;
-			    var labelLayerId;
-			    for (var i = 0; i < layers.length; i++) {
-			        if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
-			            labelLayerId = layers[i].id;
-			            break;
-			        }
-			    }
-			    map.addLayer({
-			        'id': '3d-buildings',
-			        'source': 'composite',
-			        'source-layer': 'building',
-			        'filter': ['==', 'extrude', 'true'],
-			        'type': 'fill-extrusion',
-			        'minzoom': 15,
-			        'paint': {
-			            'fill-extrusion-color': '#aaa',
-			            // use an 'interpolate' expression to add a smooth transition effect to the
-			            // buildings as the user zooms in
-			            'fill-extrusion-height': [
-			                "interpolate", ["linear"], ["zoom"],
-			                15, 0,
-			                15.05, ["get", "height"]
-			            ],
-			            'fill-extrusion-base': [
-			                "interpolate", ["linear"], ["zoom"],
-			                15, 0,
-			                15.05, ["get", "min_height"]
-			            ],
-			            'fill-extrusion-opacity': .6
-			        }
-			    }, labelLayerId);
-			});
-		}
-		display_map();
+	const stops = {{ stops|tojson }};
 	
-	</script>
-
-</body>
-</html>	
+	const map = new mapboxgl.Map({
+		container: 'map',
+		style: 'mapbox://styles/mapbox/streets-v11',
+		center: [stops[0].lon, stops[0].lat],
+		zoom: 12
+	});
+	
+	// Add markers
+	stops.forEach(stop => {
+	  new mapboxgl.Marker()
+		.setLngLat([stop.lon, stop.lat])
+		.setPopup(new mapboxgl.Popup().setText(stop.name))
+		.addTo(map);
+	});
+	
+	// Build an ordered list of coordinates
+	const orderedStops = [];
+	
+	// Find the start
+	const start = stops.find(stop => stop.type === 0);
+	if (start) {
+		orderedStops.push([start.lon, start.lat]);
+	}
+	
+	// Build the route in the order of travel
+	stops.forEach(stop => {
+		if (stop.type === 1) { // Intermediate stops
+			orderedStops.push([stop.lon, stop.lat]);
+		}
+	});
+	
+	// Then add all destinations (could be multiple if multiple legs)
+	stops.forEach(stop => {
+		if (stop.type === 2) { // Destination stops
+			orderedStops.push([stop.lon, stop.lat]);
+		}
+	});
+	
+	// Draw the route line
+	map.on('load', () => {
+	  map.addSource('route', {
+		'type': 'geojson',
+		'data': {
+		  'type': 'Feature',
+		  'properties': {},
+		  'geometry': {
+			'type': 'LineString',
+			'coordinates': orderedStops
+		  }
+		}
+	  });
+	
+	  map.addLayer({
+		'id': 'route',
+		'type': 'line',
+		'source': 'route',
+		'layout': {
+		  'line-join': 'round',
+		  'line-cap': 'round'
+		},
+		'paint': {
+		  'line-color': '#3b9ddd',
+		  'line-width': 4
+		}
+	  });
+	});
+	
+</script>
+	

@@ -117,3 +117,13 @@ CREATE TABLE routes (
     estimateTime INTEGER,
     FOREIGN KEY (userid) REFERENCES user(userid)
 );
+
+CREATE TABLE points (
+    pointid INTEGER PRIMARY KEY AUTOINCREMENT,
+    routeid INTEGER NOT NULL,
+    lat REAL NOT NULL,
+    lon REAL NOT NULL,
+    name TEXT,
+    type INTEGER,
+    FOREIGN KEY (routeid) REFERENCES routes(routeid) ON DELETE CASCADE
+);

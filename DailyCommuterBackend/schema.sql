@@ -10,13 +10,6 @@ DROP TABLE IF EXISTS subway_stop_times;
 DROP TABLE IF EXISTS routes;
 
 
-CREATE TABLE user (
-    userid INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
-);
-
-
 CREATE TABLE subway_alerts (
     alert_id TEXT,
     agency_id TEXT,
@@ -104,7 +97,7 @@ CREATE TABLE subway_stop_times (
 
 CREATE TABLE routes (
 	routeid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    route_name TEXT NOT NULL,
+    route_name TEXT,
 	start_address TEXT NOT NULL,
 	end_address TEXT NOT NULL,
 	arrival_time TEXT NOT NULL,
@@ -112,10 +105,9 @@ CREATE TABLE routes (
 	start_lon REAL,
 	end_lat REAL,
 	end_lon REAL,
-	userid INTEGER NOT NULL,
+	userid TEXT, -- from firebase
     bestTime INTEGER,
-    estimateTime INTEGER,
-    FOREIGN KEY (userid) REFERENCES user(userid)
+    estimateTime INTEGER
 );
 
 CREATE TABLE points (

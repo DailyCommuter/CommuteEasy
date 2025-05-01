@@ -10,6 +10,8 @@ from google.transit import gtfs_realtime_pb2
 from flask import jsonify
 from DailyCommuterBackend.db import get_db
 from DailyCommuterBackend.models import Route
+import firebase_admin
+from firebase_admin import credentials, auth
 
 
 # API key must be given to server when deploying
@@ -17,6 +19,18 @@ load_dotenv()
 BUS_FEED_KEY = os.getenv("BUS_FEED_KEY")
 TRANSIT_TOKEN = os.getenv("TRANSIT_TOKEN")
 
+# cred = credentials.Certificate("path/to/serviceAccountKey.json")
+# firebase_admin.initialize_app(cred)
+
+# Verify Firebase ID token
+def verify_token(id_token):
+    try:
+        decoded_token = auth.verify_id_token(id_token)
+        return decoded_token['uid']
+    except Exception as e:
+        print("Token verification failed:", e)
+        return None
+    
 
 # URLs for all api calls
 train_update_urls = [
@@ -376,16 +390,22 @@ def createRoute(start_address, end_address, arriveby, userid):
     time.sleep(1) #prevent going over API limit
     end_lat, end_lon = geocoder(end_address)
 
-    conn = get_db()
-    c = conn.cursor()
-    c.execute('''
-                INSERT INTO routes (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arrival_time, userid)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arriveby, userid)) 
-    route_id = c.lastrowid
-    conn.commit()
-    
-    return getRoute(route_id)
+    try:
+        with get_db() as conn:
+            c = conn.cursor()
+            c.execute('''
+                        INSERT INTO routes (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arrival_time, userid)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    ''', (start_address, end_address, start_lat, start_lon, end_lat, end_lon, arriveby, userid)) 
+            route_id = c.lastrowid
+            conn.commit()
+            print("after commit")
+    except sqlite3.IntegrityError as e:
+        print(f"Integrity Error: {e}")
+    except Exception as e:
+        print(f"Error updating database: {e}")
+    finally:
+        return getRoute(route_id)
 
 
 def getRoute(route_id):
@@ -477,6 +497,32 @@ def Router(route):
         return jsonify({"error": str(e)}), 500
 
 
+
+# Get a SINGLE saved route for a given user and route_name
+# @param userid: user id of requester
+# @param route_name: route name of requested route
+# @return planed route
+def get_and_plan_route(userid, route_name):
+    try:
+        with get_db() as db:
+            route_id = db.execute('''
+                SELECT routeid
+                FROM routes
+                WHERE userid, route_name = ?, ?
+                ''', 
+                (userid, route_name,)).fetchall()
+            
+            route = getRoute(route_id)
+
+    except sqlite3.IntegrityError as e:
+        print(f"Integrity Error: {e}")
+    except Exception as e:
+        print(f"Error updating database: {e}")
+    finally:
+        return Router(route)
+
+
+# Get ALL the saved routes for a given user
 # @param userid: user id of requester
 # @return dictionary: {route_name : {start_address, end_address, arrival_time}, {...}}
 '''
@@ -498,22 +544,18 @@ def get_saved_routes(userid):
     try:
         with get_db() as db:
             routes = db.execute('''
-                SELECT route_name, start_address, end_address, arrival_time
+                SELECT routeid, route_name
                 FROM routes
                 WHERE userid = ?
                 ''', 
                 (userid,)).fetchall()
+            saved_routes = []
             for route in routes:
-                route_name = route["route_name"]
-                start_address = route["start_address"]
-                end_address = route["end_address"]
-                arrival_time = route["arrival_time"]
-
-                details = {"start_address" : f"{start_address}",
-                           "end_address" : f"{end_address}",
-                           "arrival_time" : f"{arrival_time}",}
-                
-                saved_routes = {f"{route_name}" : details}
+                cur_route = getRoute(route["routeid"])
+                details = {"start_address" : f"{cur_route.start_address}",
+                           "end_address" : f"{cur_route.end_address}",
+                           "arrival_time" : f"{cur_route.arrival_time}",}
+                saved_routes.append({f"{route["route_name"]}" : details})
 
     except sqlite3.IntegrityError as e:
         print(f"Integrity Error: {e}")

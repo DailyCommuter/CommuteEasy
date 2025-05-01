@@ -8,18 +8,16 @@ import ProtectedRoute from "./context/ProtectedRoute";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<WelcomePage />} />
-        
-        {/* Protected Routes*/}
-        <Route path="/home" element={<ProtectedRoute> <HomePage /> </ProtectedRoute>} />
-        <Route path="/commuting" element={<ProtectedRoute> <CommutingPage /> </ProtectedRoute>} />
 
-        {/* Catch-all route for 404s */}
-        {/* <Route path="*" element={<NotFound />} /> */}
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<WelcomePage />} />
+      <Route path="/home" element={<HomePage />} />
+      <Route path="/commuting" element={<CommutingPage />} />
+
+
+      {/* Catch-all route for 404s */}
+      {/* <Route path="*" element={<NotFound />} /> */}
+    </Routes>
   );
 }
 

@@ -1,6 +1,7 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 )
+from flask_cors import CORS
 from werkzeug.exceptions import abort
 from dotenv import load_dotenv
 import os
@@ -16,6 +17,7 @@ TRANSIT_TOKEN = os.getenv("TRANSIT_TOKEN")
 
 
 bp = Blueprint('home', __name__)
+CORS(bp, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 
 @bp.route('/')
@@ -58,17 +60,21 @@ def map_view(routeid):
 @bp.route('/addRoute', methods=['GET', 'POST'])
 def createRouteForm():
     if request.method == 'POST':
-        start_address = request.form['start_address']
-        end_address = request.form['end_address']
-        arriveby = request.form['arrival_time']
-        userid = '69' #joke user id, to be replaced once users are implemented
+        data = request.get_json()
+        start_address = data['start_address']
+        end_address = data['end_address']
+        arriveby = data['arriveby']
+        userid = '69'  # placeholder user ID
 
         try:
+            print("before route created")
+            print(start_address, end_address, arriveby, userid)
             newroute = createRoute(start_address, end_address, arriveby, userid)
+            print("route created")
             Router(newroute)
-            return redirect(url_for('home.map_view', routeid=newroute.id)) #should go to saved routes page
+            return jsonify({"redirect_url": url_for('home.map_view', routeid=newroute.id)}), 200
         except Exception as e:
-            return f"Error: {e}", 500
+            return f"Error: {e}", 502
     return render_template('addroute.html')
 
 

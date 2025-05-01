@@ -28,7 +28,8 @@ A web application to offer real-time updates, schedules, and transit information
 ## Development
 
 Make sure you have Node/npm installed on your device
-If it is your first time starting the app, cd into DailyCommuterFrontend\client\daily-commuter
+If it is your first time starting the app,
+**cd into DailyCommuterFrontend\client\daily-commuter**
 Then run:
 
 ```cmd
@@ -46,8 +47,8 @@ pip install -r requirements.txt
 
 <!-- Initialize the database -->
 flask --app DailyCommuterBackend init-db
-<!-- Start the app -->
+<!-- Start React -->
 npm run dev
-(not sure about this)
+<!-- Start Flask -->
 flask --app DailyCommuterBackend run --debug
 ```

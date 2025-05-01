@@ -4,6 +4,8 @@ import { FaTrain } from "react-icons/fa6";
 import NewCommuteForm from "../components/new-commute-form";
 import background from "../assets/background.png";
 import MyCommutesForm from "../components/my-commutes-form";
+import { handleSignOut } from "../components/utils/auth";
+
 export default function HomePage() {
   return (
     <Box
@@ -16,6 +18,7 @@ export default function HomePage() {
       position="relative"
       overflow="hidden"
     >
+      <Button onClick={handleSignOut}> Sign Out</Button>
       <Center minH="100vh">
         <Stack gap="4" direction="row" wrap="wrap">
           <Card.Root bg={"#161616"} borderColor={"gray"} borderRadius="33.5px">

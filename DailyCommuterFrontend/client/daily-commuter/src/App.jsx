@@ -6,16 +6,14 @@ import HomePage from "./pages/home";
 import CommutingPage from "./pages/commuting-page";
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<WelcomePage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/commuting" element={<CommutingPage />} />
+    <Routes>
+      <Route path="/" element={<WelcomePage />} />
+      <Route path="/home" element={<HomePage />} />
+      <Route path="/commuting" element={<CommutingPage />} />
 
-        {/* Catch-all route for 404s */}
-        {/* <Route path="*" element={<NotFound />} /> */}
-      </Routes>
-    </Router>
+      {/* Catch-all route for 404s */}
+      {/* <Route path="*" element={<NotFound />} /> */}
+    </Routes>
   );
 }
 

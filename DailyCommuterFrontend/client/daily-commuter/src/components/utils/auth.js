@@ -1,7 +1,40 @@
 // import { auth } from "./firebase_client"; // import the firebase client you set up
 // import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
+import { auth } from "./firebase_config";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "@firebase/auth";
+
+export const handleCreateUserWithEmailAndPassword = async (formFields) => {
+  const { email, password } = formFields;
+  return createUserWithEmailAndPassword(auth, email, password);
+};
+
+export const handleSigninWithEmailAndPassword = async (formFields) => {
+  const { username, password } = formFields;
+  signInWithEmailAndPassword(auth, email, password);
+};
+
+export const handleSignInWithGoogle = async () => {
+  console.log("google fired");
+  const provider = new GoogleAuthProvider();
+  const result = await signInWithPopup(auth, provider);
+
+  return result;
+};
+
+export const handleSignOut = () => {
+  console.log("signing out");
+  return auth.signOut();
+};
+//
+
 // Handles login with email/password
+
 export const handleLogin = (formFields) => {
   const { username, password } = formFields;
   console.log(formFields);

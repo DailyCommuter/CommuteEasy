@@ -10,10 +10,16 @@ import {
 } from "@chakra-ui/react";
 import google from "../assets/google.png";
 import { useState } from "react";
-import { handleLogin } from "./utils/firebase-requests";
-import { handleSignUp } from "./utils/firebase-requests";
+import {
+  handleSigninWithEmailAndPassword,
+  handleCreateUserWithEmailAndPassword,
+  handleSignInWithGoogle,
+} from "./utils/auth";
+// import { useAuth } from "../contexts/auth_context";
 
 export default function LoginForms() {
+  // const { userLoggedIn } = useAuth();
+
   const [formType, setFormType] = useState("none");
   const [formFields, setFormFields] = useState({
     username: "",
@@ -81,7 +87,7 @@ export default function LoginForms() {
               borderRadius="33.5px"
               borderColor="#6DCD65"
               borderWidth=".5px"
-              onClick={() => setFormType("GoogleSignIn")}
+              onClick={() => handleSignInWithGoogle()}
             >
               <Image src={google} />
               Sign in with Google
@@ -157,7 +163,7 @@ export default function LoginForms() {
                 borderColor="#6DCD65"
                 borderWidth=".5px"
                 mt={2}
-                onClick={() => handleSignUp(formFields)}
+                onClick={() => handleCreateUserWithEmailAndPassword(formFields)}
                 w={100}
                 _hover={{ bg: "#6DCD65", color: "black" }}
               >

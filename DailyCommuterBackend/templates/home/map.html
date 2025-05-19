@@ -1,0 +1,112 @@
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <title>Mapbox Stops Map</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!-- Mapbox GL JS -->
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js'></script>
+
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css' rel='stylesheet' />
+
+
+    <style>
+
+      body { margin:0; padding:0; }
+
+      #map { position:absolute; top:0; bottom:0; width:100%; }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<div id="map"></div>
+
+<script>
+
+	mapboxgl.accessToken = '{{ MAPBOX_TOKEN }}';
+	
+	const stops = {{ stops|tojson }};
+	
+	const map = new mapboxgl.Map({
+		container: 'map',
+		style: 'mapbox://styles/mapbox/streets-v11',
+		center: [stops[0].lon, stops[0].lat],
+		zoom: 12
+	});
+	
+	// Add markers
+	stops.forEach(stop => {
+	  new mapboxgl.Marker()
+		.setLngLat([stop.lon, stop.lat])
+		.setPopup(new mapboxgl.Popup().setText(stop.name))
+		.addTo(map);
+	});
+	
+	// Build an ordered list of coordinates
+	const orderedStops = [];
+	
+	// Find the start
+	const start = stops.find(stop => stop.type === 0);
+	if (start) {
+		orderedStops.push([start.lon, start.lat]);
+	}
+	
+	// Build the route in the order of travel
+	stops.forEach(stop => {
+		if (stop.type === 1) { // Intermediate stops
+			orderedStops.push([stop.lon, stop.lat]);
+		}
+	});
+	
+	// Then add all destinations (could be multiple if multiple legs)
+	stops.forEach(stop => {
+		if (stop.type === 2) { // Destination stops
+			orderedStops.push([stop.lon, stop.lat]);
+		}
+	});
+	
+	// Draw the route line
+	map.on('load', () => {
+	  map.addSource('route', {
+		'type': 'geojson',
+		'data': {
+		  'type': 'Feature',
+		  'properties': {},
+		  'geometry': {
+			'type': 'LineString',
+			'coordinates': orderedStops
+		  }
+		}
+	  });
+	
+	  map.addLayer({
+		'id': 'route',
+		'type': 'line',
+		'source': 'route',
+		'layout': {
+		  'line-join': 'round',
+		  'line-cap': 'round'
+		},
+		'paint': {
+		  'line-color': '#3b9ddd',
+		  'line-width': 4
+		}
+	  });
+	});
+	
+</script>
+	

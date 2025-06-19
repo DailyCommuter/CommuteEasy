@@ -31,7 +31,7 @@ Jinja2==3.1.6
 jsonify==0.5
 MarkupSafe==3.0.2
 numpy==2.2.4
-protobuf==6.30.2
+protobuf==6.31.1
 python-dotenv==1.1.0
 pytz==2025.2
 requests==2.32.3
